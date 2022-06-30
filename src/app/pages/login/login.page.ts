@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
         if (err.code == "UserNotConfirmedException") {
           this.router.navigate(['signup-confirm', this.form.controls.email.value]);
         } else if (err.code == "NotAuthorizedException") {
-          this.toast.error("Login Failed: check that the user and password are correct");        
+          this.toast.error(err.message);        
         } else {
           this.toast.error(err.message);                  
         }        
