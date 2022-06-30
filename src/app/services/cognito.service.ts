@@ -19,7 +19,7 @@ export class CognitoService {
    * @param password 
    * @returns Promise<resolve, reject>
    */
-  signUp(email, password) {
+  signUp(email, password): Promise<any> {
     return new Promise((resolve, reject) => {
       const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
 
@@ -30,8 +30,10 @@ export class CognitoService {
 
       userPool.signUp(email, password, userAttribute, null, (err, result) => {
         if (err) {
+          console.debug("signUp.error: "+ err);
           reject(err);
         } else {
+          console.debug("signUp.success: "+ JSON.stringify(result));
           resolve(result);
         }
       });
@@ -42,8 +44,9 @@ export class CognitoService {
    * Session logout function
    */
   async logOut() {
-    const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
+    const userPool = new AWSCognito.CognitoUserPool(environment.cognito);    
     userPool.getCurrentUser().signOut();
+    console.debug("logOut.success");
   }
 
   /**
@@ -52,7 +55,7 @@ export class CognitoService {
    * @param email 
    * @returns Promise<resolve, reject>
    */
-  confirmUser(verificationCode, email) {
+  confirmUser(verificationCode, email): Promise<any> {
     return new Promise((resolve, reject) => {
       const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
 
@@ -63,8 +66,10 @@ export class CognitoService {
 
       cognitoUser.confirmRegistration(verificationCode, true, function (err, result) {
         if (err) {
+          console.debug("confirmUser.error: "+ err);
           reject(err);
         } else {
+          console.debug("confirmUser.success: "+ JSON.stringify(result));
           resolve(result);
         }
       });
@@ -77,7 +82,7 @@ export class CognitoService {
    * @param password 
    * @returns Promise<resolve, reject>
    */
-  authenticate(email, password) {
+  authenticate(email, password): Promise<any> {
     return new Promise((resolve, reject) => {
       const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
 
@@ -93,9 +98,11 @@ export class CognitoService {
 
       cognitoUser.authenticateUser(authDetails, {
         onSuccess: result => {
+          console.debug("authenticate.success: "+ JSON.stringify(result));
           resolve(result);
         },
         onFailure: err => {
+          console.debug("authenticate.error: "+ err);
           reject(err);
         },
         newPasswordRequired: userAttributes => {
@@ -109,15 +116,109 @@ export class CognitoService {
 
           cognitoUser.completeNewPasswordChallenge(password, userAttributes, {
             onSuccess: function (result) {
+              console.debug("authenticate.completeNewPasswordChallenge.success: "+ JSON.stringify(result));
               resolve(result);
              },
             onFailure: function (error) {
+              console.debug("authenticate.completeNewPasswordChallenge.error: "+ error);
               reject(error);
             }
           });
         }
       });
     });
+  }
+
+  /**
+   * Sends reset password code
+   * @param email 
+   */
+   forgotPassword(email): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const cognitoUser = new AWSCognito.CognitoUser({
+        Username: email,
+        Pool: new AWSCognito.CognitoUserPool(environment.cognito)
+      });
+      cognitoUser.forgotPassword({
+        onSuccess: function (result) {
+          console.debug("forgotPassword.success: "+ JSON.stringify(result));
+          resolve(result)
+        },
+        onFailure: function (error) {
+          console.debug("forgotPassword.error: "+ error);
+          reject(error)
+        },
+        inputVerificationCode: function (result) {
+          console.debug("forgotPassword.success: "+ JSON.stringify(result));
+          resolve(result)
+        }
+      })
+    })
+  }
+
+  /**
+   * Resets password
+   * @param email 
+   * @param verificationCode 
+   * @param password 
+   */
+  confirmNewPassword(email: string, verificationCode: string, password: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const cognitoUser = new AWSCognito.CognitoUser({
+        Username: email,
+        Pool: new AWSCognito.CognitoUserPool(environment.cognito)
+      });
+      cognitoUser.confirmPassword(verificationCode, password, {
+        onSuccess: function (result) {
+          console.debug("forgotPassword.success: "+ JSON.stringify(result));
+          resolve(result);
+        },
+        onFailure: function (error) {
+          console.debug("forgotPassword.error: "+ error);
+          switch(error.name) {
+            case "LimitExceededException": {
+              error.message = error.message;
+              break;
+            }
+            case "CodeMismatchException": {
+              error.message = error.message;
+              break;
+            }
+            case "InvalidPasswordException": {
+              error.message = "Password doesn't conform to the password policy";
+              break;
+            }
+            default: {              
+              break;
+            }
+          }
+          reject(error);
+        }
+      })
+    })
+  }
+
+  /**
+   * Resend registration confirmation code
+   * @param email 
+   * @returns Promise<resolve, reject>
+   */
+   resendCode(email): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const cognitoUser = new AWSCognito.CognitoUser({
+        Username: email,
+        Pool: new AWSCognito.CognitoUserPool(environment.cognito)
+      });
+      cognitoUser.resendConfirmationCode((error, result) => {
+        if (error) {
+          console.debug("resendCode: error: " + error);
+          reject(error)
+        } else {
+          console.debug("resendCode: success: " + JSON.stringify(result));
+          resolve(result)
+        }
+      })
+    })
   }
 
   /**

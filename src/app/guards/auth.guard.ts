@@ -1,15 +1,28 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
+import { CognitoService } from '../services/cognito.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  canActivate(
+  
+  constructor(private cognitoService: CognitoService, private router: Router,){}
+
+  async canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return true;
+    state: RouterStateSnapshot) {
+      
+      let [err, res] = await this.cognitoService.isSessionValid().
+        then(v => [null, v], err => [err, null]);
+      
+      if (err) {
+        console.debug("session is invalid");
+        this.router.navigate(['login']);
+      } 
+  
+      return true;
   }
   
 }

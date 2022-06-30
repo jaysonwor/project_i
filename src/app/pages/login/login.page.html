@@ -1,9 +1,57 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>login</ion-title>
+    <ion-title>Login</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="ion-padding-top">
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item lines="full">
+              <ion-label position="floating">Email </ion-label>
+              <ion-input required type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of appConstants.validation_messages.email">
+                <div class="error-message"
+                  *ngIf="form.get('email').hasError(validation.type) && (form.get('email').dirty || form.get('email').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+            <ion-item lines="full">
+              <ion-label position="floating">Password</ion-label>
+              <ion-input required type="password" formControlName="password"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of appConstants.validation_messages.password">
+                <div class="error-message"
+                  *ngIf="form.get('password').hasError(validation.type) && (form.get('password').dirty || form.get('password').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button [disabled]="!form.valid" expand="block" type="submit">Login</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" [routerLink]="['/signup']">SignUp</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button expand="full" [routerLink]="['/login-forgot']">Forgot Password</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </form>
 </ion-content>

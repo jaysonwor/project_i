@@ -1,31 +1,42 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { UnauthGuard } from './guards/unauth.guard';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then( m => m.HomePageModule)
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
+    path: 'home',
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [AuthGuard]
+  },  
+  {
     path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
+    loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule),
+    canActivate: [UnauthGuard]
   },
   {
     path: 'signup',
-    loadChildren: () => import('./pages/signup/signup.module').then( m => m.SignupPageModule)
+    loadChildren: () => import('./pages/signup/signup.module').then( m => m.SignupPageModule),
+    canActivate: [UnauthGuard]
   },
   {
-    path: 'signup-confirm',
-    loadChildren: () => import('./pages/signup-confirm/signup-confirm.module').then( m => m.SignupConfirmPageModule)
+    path: 'signup-confirm/:email',
+    loadChildren: () => import('./pages/signup-confirm/signup-confirm.module').then( m => m.SignupConfirmPageModule),
+    canActivate: [UnauthGuard]
   },
   {
     path: 'login-forgot',
-    loadChildren: () => import('./pages/login-forgot/login-forgot.module').then( m => m.LoginForgotPageModule)
+    loadChildren: () => import('./pages/login-forgot/login-forgot.module').then( m => m.LoginForgotPageModule),
+    canActivate: [UnauthGuard]
+  },
+  {
+    path: 'password-reset/:email',
+    loadChildren: () => import('./pages/password-reset/password-reset.module').then( m => m.PasswordResetPageModule)
   },
 ];
 

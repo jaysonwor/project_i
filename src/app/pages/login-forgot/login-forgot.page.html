@@ -1,9 +1,38 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>login_forgot</ion-title>
+    <ion-title>Forgot Password</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate >
+    <div class="ion-padding-top">
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item lines="full">
+              <ion-label position="floating">Email </ion-label>
+              <ion-input required type="email" formControlName="email"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of appConstants.validation_messages.email">
+                <div class="error-message"
+                  *ngIf="form.get('email').hasError(validation.type) && (form.get('email').dirty || form.get('email').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button [disabled]="!form.valid" expand="block" type="submit">Continue</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </form>
 </ion-content>

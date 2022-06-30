@@ -1,9 +1,43 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>signup_confirm</ion-title>
+    <ion-title>Confirm User Signup</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="ion-padding-top">
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item>
+              Enter the code that was sent to, {{ email }}, in order to complete the signup process
+            </ion-item>
+            <ion-item lines="full">
+              <ion-label position="floating">Verification Code </ion-label>
+              <ion-input required type="text" formControlName="verifyCode"></ion-input>
+            </ion-item>
+            <div class="validation-errors">
+              <ng-container *ngFor="let validation of appConstants.validation_messages.verifyCode">
+                <div class="error-message"
+                  *ngIf="form.get('verifyCode').hasError(validation.type) && (form.get('verifyCode').dirty || form.get('verifyCode').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button [disabled]="!form.valid" expand="block" type="submit">Confirm</ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col>
+          <ion-button ion-button class="submit-btn" expand="full" (click)="resend()">Resend Code?</ion-button>
+        </ion-col>
+      </ion-row>
+    </div>
+  </form>
 </ion-content>
