@@ -47,7 +47,7 @@ export class AppComponent {
     public log: Log) {
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
-        // this.log.reset();
+        this.log.reset();
       }
     });
   }

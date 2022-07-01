@@ -281,7 +281,7 @@ export class CognitoService {
     await new Promise(res => cognitoUser.getSession(res));
 
     cognitoUser.updateAttributes(attributes, function (err, result) {
-      this.log.debug(`updateAttributes: ${{ err, result }}`);
+      // this.log.debug(`updateAttributes: ${{ err, result }}`);
     });
   }
 
