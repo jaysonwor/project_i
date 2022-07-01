@@ -6,6 +6,9 @@ import { Injectable } from "@angular/core";
 export class AppConstants {
 
     validation_messages = {
+        'name': [
+            { type: 'required', message: 'name is required' }
+        ],
         'email': [
             { type: 'required', message: 'email is required' },
             { type: 'pattern', message: 'email format is invalid' }

@@ -25,8 +25,8 @@ export class Toast {
         const toast = await this.toastController.create({
             message: message,
             color: 'success',
-            position: 'top',
-            duration: 5000
+            position: 'bottom',
+            duration: 3000
         });
         toast.present();
     }
@@ -36,8 +36,8 @@ export class Toast {
         const toast = await this.toastController.create({
             message: message,
             color: 'primary',
-            position: 'top',
-            duration: 5000
+            position: 'bottom',
+            duration: 3000
         });
         toast.present();
     }

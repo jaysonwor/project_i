@@ -1,3 +1,79 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+
+  <ion-menu side="start" menuId="first" contentId="content" *ngIf="session == true">
+    <ion-header>
+      <ion-toolbar color="success">
+        <ion-title>Content</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="light">
+      <ion-menu-toggle auto-hide="true">
+        <ion-list *ngFor="let pages of navigate">
+          <ion-item [routerLink]="pages.url" routerDirection="forward">
+            <ion-icon [name]="pages.icon" slot="start"></ion-icon>
+            {{pages.title}}
+          </ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-item button (click)="logout()" routerDirection="forward">
+            <ion-icon name="log-out" slot="start"></ion-icon>
+            Sign Out
+          </ion-item>
+        </ion-list>
+      </ion-menu-toggle>
+    </ion-content>
+  </ion-menu>
+
+  <ion-content class="ion-padding">
+    <ion-router-outlet Id="content"></ion-router-outlet>  
+  </ion-content>
+
+  <ion-footer>
+    <ion-card *ngIf="this.log.eoutput.length > 0" color="danger"> {{ this.log.eoutput | json }} </ion-card>
+    <ion-card *ngIf="this.log.woutput.length > 0" color="warning"> {{ this.log.woutput | json }} </ion-card>
+    <ion-card *ngIf="this.log.ioutput.length > 0" color="primary"> {{ this.log.ioutput | json }} </ion-card>
+    <ion-card *ngIf="this.log.doutput.length > 0" color="secondary"> {{ this.log.doutput | json }} </ion-card>
+  </ion-footer>
 </ion-app>
+
+
+<!-- <ion-app>
+  <ion-menu side="start" menuId="first" contentId="content" *ngIf="session == true">
+    <ion-header>
+      <ion-toolbar color="success">
+        <ion-title>Content</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content color="light">
+      <ion-menu-toggle auto-hide="true">
+        <ion-list *ngFor="let pages of navigate">
+          <ion-item [routerLink]="pages.url" routerDirection="forward">
+            <ion-icon [name]="pages.icon" slot="start"></ion-icon>
+            {{pages.title}}
+          </ion-item>
+        </ion-list>
+        <ion-list>
+          <ion-item button (click)="logout()" routerDirection="forward">
+            <ion-icon name="log-out" slot="start"></ion-icon>
+            Sign Out
+          </ion-item>
+        </ion-list>
+      </ion-menu-toggle>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet Id="content"></ion-router-outlet>  
+
+ 
+</ion-app> -->
+
+
+<!-- <ion-footer>
+  ...
+
+  <ion-card *ngIf="this.log.eoutput.length > 0" color="danger"> {{ this.log.eoutput | json }} </ion-card>
+  <ion-card color="warning"> {{ this.log.woutput | json }} </ion-card>
+  <ion-card color="primary"> {{ this.log.ioutput | json }} </ion-card>
+  <ion-card color="secondary"> {{ this.log.doutput | json }} </ion-card>
+</ion-footer> -->
+

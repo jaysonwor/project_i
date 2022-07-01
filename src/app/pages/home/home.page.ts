@@ -19,11 +19,6 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
-  logout() {
-    this.cognitoService.logOut();
-    this.router.navigate(['login']);
-  }
-
   post() {
     // this.apiService.post();
   }
