@@ -200,6 +200,32 @@ export class CognitoService {
   }
 
   /**
+   * Change password of authenticated user
+   * @param email 
+   * @param oldPassword 
+   * @param newPassword 
+   */
+   async changePassword(email: string, oldPassword: string, newPassword: string) {
+
+    const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
+    const cognitoUser = userPool.getCurrentUser();
+    await new Promise(res => cognitoUser.getSession(res));
+
+    return new Promise((resolve, reject) => {      
+
+      cognitoUser.changePassword(oldPassword, newPassword, (error, result) => {
+        if (error) {
+          console.debug("changePassword.error: " + error);
+          reject(error);
+        } else {
+          console.debug("changePassword.success: " + JSON.stringify(result));
+          resolve(result);
+        }
+      })
+    })
+  }
+
+  /**
    * Resend registration confirmation code
    * @param email 
    * @returns Promise<resolve, reject>
@@ -228,6 +254,10 @@ export class CognitoService {
     // console.log(idToken)
     const jwtHelper = new JwtHelperService();
     return attributes = jwtHelper.decodeToken(idToken);
+  }
+
+  get email() {
+    return this.getAttributes()['email'];
   }
 
   /**

@@ -49,6 +49,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/profile/profile.module').then( m => m.ProfilePageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'security-settings',
+    loadChildren: () => import('./pages/security-settings/security-settings.module').then( m => m.SecuritySettingsPageModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

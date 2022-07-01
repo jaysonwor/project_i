@@ -13,6 +13,9 @@ export class AppConstants {
             { type: 'required', message: 'email is required' },
             { type: 'pattern', message: 'email format is invalid' }
         ],
+        'currentPassword': [
+            { type: 'required', message: 'current password is required' },
+        ],
         'password': [
             { type: 'required', message: 'password is required' },
             { type: 'minlength', message: 'password must be at least 8 chars' },

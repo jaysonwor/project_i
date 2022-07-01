@@ -25,7 +25,7 @@ export class AppComponent {
       },
       {
         title: 'Security Settings',
-        url: '/security',
+        url: '/security-settings',
         icon: 'key'
       },
       {
