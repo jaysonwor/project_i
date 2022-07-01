@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
-import { Toast } from 'src/app/utils/toast';
+import { ToastUtil } from 'src/app/utils/toast';
 
 @Component({
   selector: 'app-login-forgot',
@@ -18,7 +18,7 @@ export class LoginForgotPage implements OnInit {
     private cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toast: Toast,
+    private toast: ToastUtil,
     public appConstants: AppConstants) {
   }
 

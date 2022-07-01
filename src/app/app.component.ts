@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { ApiService } from './services/api.service';
 import { CognitoService } from './services/cognito.service';
 import { Log } from './utils/log';
-import { Toast } from './utils/toast';
+import { ToastUtil } from './utils/toast';
 
 @Component({
   selector: 'app-root',
@@ -41,21 +41,15 @@ export class AppComponent {
     ];
 
   constructor(
-    private cognitoService: CognitoService,
+    public cognitoService: CognitoService,
     private router: Router,
-    private toast: Toast,
+    private toast: ToastUtil,
     public log: Log) {
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
         // this.log.reset();
       }
     });
-  }
-
-  logout() {
-    this.cognitoService.logOut();
-    this.toast.success("Logout successful");
-    this.router.navigate(['login']);
   }
 
   get session(): Boolean {

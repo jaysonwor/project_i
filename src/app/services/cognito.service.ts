@@ -47,8 +47,12 @@ export class CognitoService {
    */
   async logOut() {
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
-    userPool.getCurrentUser().signOut();
+    await userPool.getCurrentUser().signOut();
     this.log.debug("logOut.success");
+  }
+
+  get userPool() {
+    return new AWSCognito.CognitoUserPool(environment.cognito);
   }
 
   /**

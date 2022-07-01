@@ -15,7 +15,7 @@
           </ion-item>
         </ion-list>
         <ion-list>
-          <ion-item button (click)="logout()" routerDirection="forward">
+          <ion-item button (click)="cognitoService.logOut()" href="/">
             <ion-icon name="log-out" slot="start"></ion-icon>
             Sign Out
           </ion-item>

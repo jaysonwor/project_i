@@ -4,7 +4,7 @@ import { ToastController } from "@ionic/angular";
 @Injectable({
     providedIn: 'root'
 })
-export class Toast {
+export class ToastUtil {
     constructor(
         private toastController: ToastController
     ) { }
@@ -15,20 +15,22 @@ export class Toast {
             message: message,
             color: 'danger',
             position: 'bottom',
-            duration: 5000
+            duration: 5000,
+            htmlAttributes: { tabindex: undefined }
         });
         toast.present();
     }
 
     async success(message) {
 
-        const toast = await this.toastController.create({
-            message: message,
-            color: 'success',
-            position: 'bottom',
-            duration: 3000
-        });
-        toast.present();
+        // const toast = await this.toastController.create({
+        //     message: message,
+        //     color: 'success',
+        //     position: 'bottom',
+        //     duration: 3000,
+        //     htmlAttributes: { tabindex: undefined }
+        // });
+        // toast.present();
     }
 
     async info(message) {
@@ -37,7 +39,8 @@ export class Toast {
             message: message,
             color: 'primary',
             position: 'bottom',
-            duration: 3000
+            duration: 3000,
+            htmlAttributes: { tabindex: undefined }
         });
         toast.present();
     }

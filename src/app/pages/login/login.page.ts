@@ -3,8 +3,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
-import { Log } from 'src/app/utils/log';
-import { Toast } from 'src/app/utils/toast';
+import { ToastUtil } from 'src/app/utils/toast';
 
 @Component({
   selector: 'app-login',
@@ -19,16 +18,15 @@ export class LoginPage implements OnInit {
     private cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toast: Toast,
-    private log: Log,
+    private toast: ToastUtil,
     public appConstants: AppConstants) {
   }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required
+      email: ['work5538@gmail.com', [Validators.required
       ]],
-      password: ['', [Validators.required
+      password: ['s3cur3M#', [Validators.required
       ]],
     })
   }

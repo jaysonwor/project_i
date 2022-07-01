@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
-import { Toast } from 'src/app/utils/toast';
+import { ToastUtil } from 'src/app/utils/toast';
 import { CustomValidator } from 'src/app/validators/custom.validator';
 
 @Component({
@@ -16,7 +16,7 @@ export class SecuritySettingsPage implements OnInit {
   constructor(
     private cognitoService: CognitoService,
     private formBuilder: FormBuilder,
-    private toast: Toast,
+    private toast: ToastUtil,
     public appConstants: AppConstants
   ) { }
 

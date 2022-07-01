@@ -9,24 +9,8 @@ import { Storage } from '@ionic/storage';
 // import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
-import { Toast } from 'src/app/utils/toast';
+import { ToastUtil } from 'src/app/utils/toast';
 import { PhotoUtils } from 'src/app/utils/photo';
-import { Log } from 'src/app/utils/log';
-// import {
-//   Capacitor,
-//   Plugins,
-// } from '@capacitor/core';
-
-// const { Filesystem, Directory } = Plugins;
-
-// const IMAGE_DIR = 'stored-images';
-
-// interface LocalFile {
-//   name: string;
-//   path: string;
-//   data: string;
-// }
-
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -46,10 +30,9 @@ export class ProfilePage implements OnInit {
     private cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private toast: Toast,
+    private toast: ToastUtil,
     private photo: PhotoUtils,
-    public appConstants: AppConstants,
-    public log: Log) {
+    public appConstants: AppConstants) {
   }
 
   async ionViewWillEnter() {
