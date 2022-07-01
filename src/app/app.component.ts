@@ -47,7 +47,6 @@ export class AppComponent {
     public log: Log) {
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
-        console.log("will enter")
         this.log.reset();
       }
     });

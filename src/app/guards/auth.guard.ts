@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CognitoService } from '../services/cognito.service';
+import { Log } from '../utils/log';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
   
-  constructor(private cognitoService: CognitoService, private router: Router,){}
+  constructor(
+    private cognitoService: CognitoService, 
+    private router: Router,
+    private log: Log){}
 
   async canActivate(
     route: ActivatedRouteSnapshot,
@@ -18,7 +22,7 @@ export class AuthGuard implements CanActivate {
         then(v => [null, v], err => [err, null]);
       
       if (err) {
-        console.debug("session is invalid");
+        this.log.debug("session is invalid");
         this.router.navigate(['login']);
       } 
   

@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CognitoService } from '../services/cognito.service';
+import { Log } from '../utils/log';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UnauthGuard implements CanActivate {
-  constructor(private cognitoService: CognitoService, private router: Router,) { }
+  constructor(
+    private cognitoService: CognitoService, 
+    private router: Router,
+    private log: Log) { }
 
   async canActivate(
     route: ActivatedRouteSnapshot,
@@ -17,7 +21,7 @@ export class UnauthGuard implements CanActivate {
       then(v => [null, v], err => [err, null]);
 
     if (res) {
-      console.debug("session exists");
+      this.log.debug("session exists");
       this.router.navigate(['home']);
     }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as AWSCognito from "amazon-cognito-identity-js";
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Log } from '../utils/log';
 
 /**
  * Cognito service class
@@ -12,7 +13,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class CognitoService {
 
-  constructor() { }
+  constructor(private log: Log) { }
 
   /**
    * User creation function
@@ -31,10 +32,10 @@ export class CognitoService {
 
       userPool.signUp(email, password, userAttribute, null, (err, result) => {
         if (err) {
-          console.debug("signUp.error: " + err);
+          this.log.error("signUp.error: " + err);
           reject(err);
         } else {
-          console.debug("signUp.success: " + JSON.stringify(result));
+          this.log.debug("signUp.success: " + JSON.stringify(result));
           resolve(result);
         }
       });
@@ -47,7 +48,7 @@ export class CognitoService {
   async logOut() {
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
     userPool.getCurrentUser().signOut();
-    console.debug("logOut.success");
+    this.log.debug("logOut.success");
   }
 
   /**
@@ -67,10 +68,10 @@ export class CognitoService {
 
       cognitoUser.confirmRegistration(verificationCode, true, function (err, result) {
         if (err) {
-          console.debug("confirmUser.error: " + err);
+          this.log.error(`confirmUser.error: ${err}`);
           reject(err);
         } else {
-          console.debug("confirmUser.success: " + JSON.stringify(result));
+          this.log.debug(`confirmUser.success: ${JSON.stringify(result)}`);
           resolve(result);
         }
       });
@@ -99,14 +100,15 @@ export class CognitoService {
 
       cognitoUser.authenticateUser(authDetails, {
         onSuccess: result => {
-          console.debug("authenticate.success: " + JSON.stringify(result));
+          this.log.debug(`authenticate.success: ${JSON.stringify(result)}`);
           resolve(result);
         },
         onFailure: err => {
-          console.debug("authenticate.error: " + err);
+          this.log.error(`authenticate.error: ${err}`);
           reject(err);
         },
         newPasswordRequired: userAttributes => {
+          this.log.warn("authenticate.warn: new password is required");
           // User was signed up by an admin and must provide new
           // password and required attributes, if any, to complete
           // authentication.
@@ -117,11 +119,11 @@ export class CognitoService {
 
           cognitoUser.completeNewPasswordChallenge(password, userAttributes, {
             onSuccess: function (result) {
-              console.debug("authenticate.completeNewPasswordChallenge.success: " + JSON.stringify(result));
+              this.log.debug(`authenticate.completeNewPasswordChallenge.success: ${JSON.stringify(result)}`);
               resolve(result);
             },
             onFailure: function (error) {
-              console.debug("authenticate.completeNewPasswordChallenge.error: " + error);
+              this.log.error(`authenticate.completeNewPasswordChallenge.error: ${error}`);
               reject(error);
             }
           });
@@ -142,15 +144,15 @@ export class CognitoService {
       });
       cognitoUser.forgotPassword({
         onSuccess: function (result) {
-          console.debug("forgotPassword.success: " + JSON.stringify(result));
+          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result)
         },
         onFailure: function (error) {
-          console.debug("forgotPassword.error: " + error);
+          this.log.error(`forgotPassword.error: ${error}`);
           reject(error)
         },
         inputVerificationCode: function (result) {
-          console.debug("forgotPassword.success: " + JSON.stringify(result));
+          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result)
         }
       })
@@ -171,11 +173,11 @@ export class CognitoService {
       });
       cognitoUser.confirmPassword(verificationCode, password, {
         onSuccess: function (result) {
-          console.debug("forgotPassword.success: " + JSON.stringify(result));
+          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result);
         },
         onFailure: function (error) {
-          console.debug("forgotPassword.error: " + error);
+          this.log.error(`forgotPassword.error: ${error}`);
           switch (error.name) {
             case "LimitExceededException": {
               error.message = error.message;
@@ -215,10 +217,10 @@ export class CognitoService {
 
       cognitoUser.changePassword(oldPassword, newPassword, (error, result) => {
         if (error) {
-          console.debug("changePassword.error: " + error);
+          this.log.error(`changePassword.error: ${error}`);
           reject(error);
         } else {
-          console.debug("changePassword.success: " + JSON.stringify(result));
+          this.log.debug(`changePassword.success: ${JSON.stringify(result)}`);
           resolve(result);
         }
       })
@@ -238,10 +240,10 @@ export class CognitoService {
       });
       cognitoUser.resendConfirmationCode((error, result) => {
         if (error) {
-          console.debug("resendCode: error: " + error);
+          this.log.error(`resendCode: error: ${error}`);
           reject(error)
         } else {
-          console.debug("resendCode: success: " + JSON.stringify(result));
+          this.log.debug(`resendCode: success: ${JSON.stringify(result)}`);
           resolve(result)
         }
       })
@@ -251,7 +253,6 @@ export class CognitoService {
   getAttributes() {
     let attributes = null
     let idToken = JSON.parse(sessionStorage.getItem("IDTOKEN"));
-    // console.log(idToken)
     const jwtHelper = new JwtHelperService();
     return attributes = jwtHelper.decodeToken(idToken);
   }
@@ -266,15 +267,12 @@ export class CognitoService {
    * @returns 
    */
   async updateAttributes(attributes) {
-
-    console.log(attributes)
-
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
     let cognitoUser = userPool.getCurrentUser();
     await new Promise(res => cognitoUser.getSession(res));
 
     cognitoUser.updateAttributes(attributes, function (err, result) {
-      console.log({ err, result });
+      this.log.debug(`updateAttributes: ${{ err, result }}`);
     });
   }
 
@@ -301,7 +299,7 @@ export class CognitoService {
               reject(true);
             }
           } catch (e) {
-            console.debug(e);
+            this.log.error(e);
             sessionStorage.setItem("SESSION.ACTIVE", false.toString());
             reject(true);
           }

@@ -42,20 +42,15 @@ export class SecuritySettingsPage implements OnInit {
       this.form.controls.password.value
     ).then(
       res => {
-        // this.loading = false
-        // this.toastService.toast("Password changed", "primary")
         this.toast.info("Password changed")
       },
       err => {
-        // this.loading = false
         if (err.message.toString().toLowerCase().startsWith("incorrect username or password")) {
           err.message = "Error Saving: confirm current password is correct"
         }
-        // console.log("ChangePasswordPage.change: failed, stack: " + err.message)
         this.toast.error(err.message)
       }
     );
-    // console.log(this.cognitoService.email)
   }
 
 }

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
+import { Log } from 'src/app/utils/log';
 import { Toast } from 'src/app/utils/toast';
 
 @Component({
@@ -19,6 +20,7 @@ export class LoginPage implements OnInit {
     private router: Router,
     private formBuilder: FormBuilder,
     private toast: Toast,
+    private log: Log,
     public appConstants: AppConstants) {
   }
 

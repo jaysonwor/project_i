@@ -93,7 +93,6 @@ export class ProfilePage implements OnInit {
   private getAttributes() {
     let attributes = this.cognitoService.getAttributes();
     this.name = attributes['name'];
-    // console.log(attributes['name'])
   }
 
   async selectImage() {
