@@ -23,14 +23,14 @@ export class ToastUtil {
 
     async success(message) {
 
-        // const toast = await this.toastController.create({
-        //     message: message,
-        //     color: 'success',
-        //     position: 'bottom',
-        //     duration: 3000,
-        //     htmlAttributes: { tabindex: undefined }
-        // });
-        // toast.present();
+        const toast = await this.toastController.create({
+            message: message,
+            color: 'success',
+            position: 'bottom',
+            duration: 3000,
+            htmlAttributes: { tabindex: undefined }
+        });
+        toast.present();
     }
 
     async info(message) {

@@ -48,6 +48,11 @@ export class CognitoService {
   async logOut() {
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
     await userPool.getCurrentUser().signOut();
+    let n = sessionStorage.length;
+    while (n--) {
+      let key = sessionStorage.key(n);
+      sessionStorage.removeItem(key);
+    }
     this.log.debug("logOut.success");
   }
 

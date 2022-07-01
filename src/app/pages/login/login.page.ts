@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -24,9 +25,9 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     this.form = this.formBuilder.group({
-      email: ['', [Validators.required
+      email: [environment.u, [Validators.required
       ]],
-      password: ['', [Validators.required
+      password: [environment.p, [Validators.required
       ]],
     })
   }
