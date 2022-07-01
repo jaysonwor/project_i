@@ -6,6 +6,7 @@ import { Log } from "./log";
 
 const IMAGE_DIR = 'stored-images';
 const IMAGE_PARENT_DIR = Directory.Cache;
+const PROFILE_PIC = "PROFILE_PIC";
 
 @Injectable({
     providedIn: 'root'
@@ -26,12 +27,16 @@ export class PhotoUtils implements OnInit {
         }
     }
 
+    /**
+     * Choose image from camera or photos and converts to compatible format for rendering
+     * @returns base64 compatible formated image
+     */
     async chooseImage() {
         const [err, res] = await Camera.getPhoto({
             quality: 90,
             allowEditing: false,
             resultType: CameraResultType.Uri,
-            source: CameraSource.Photos // Camera, Photos or Prompt!
+            source: CameraSource.Prompt // Camera, Photos or Prompt!
         }).
             then(v => [null, v], err => [err, null]);
 
@@ -42,43 +47,44 @@ export class PhotoUtils implements OnInit {
             throw new Error(err);
         } else {
             this.log.debug("chooseImage: success: " + JSON.stringify(res));
-            if (this.plt.is('hybrid')) {
-                await this.saveImage(res);
-                return await this.loadProfilePic();
-            } else {
-                return await this.readAsBase64(res);
-            }
+            await this.saveImage(res);
+            return await this.loadProfilePic();
         } 
 
     }
 
+    /**
+     * Saves a photo to local disk (for mobile) or in session storage (for web)
+     * @param photo 
+     */
     async saveImage(photo: Photo) {
         const base64Data = await this.readAsBase64(photo);
         const filePath = `${IMAGE_DIR}/${this.profilePath}`;
-        const [err, res] = await Filesystem.writeFile({
-            path: filePath,
-            data: base64Data,
-            directory: IMAGE_PARENT_DIR
-        }).
-            then(v => [null, v], err => [err, null]);
 
-        if (err) {
-            this.log.error("saveImage: error: " + err);
-            throw new Error(err);
+        //check for mobile device 
+        //otherwise assume web and store in session
+        if (this.plt.is('hybrid')) {
+            const [err, res] = await Filesystem.writeFile({
+                path: filePath,
+                data: base64Data,
+                directory: IMAGE_PARENT_DIR
+            }).
+                then(v => [null, v], err => [err, null]);
+
+            if (err) {
+                this.log.error("saveImage: error: " + err);
+                throw new Error(err);
+            } else {
+                this.log.debug("saveImage: success: " + JSON.stringify(res));
+            }
         } else {
-            this.log.debug("saveImage: success: " + JSON.stringify(res));
-            return res;
+            sessionStorage.setItem(PROFILE_PIC, base64Data);
         }
-
-        //   return (err) ? err : res;
-        // this.debug.push("saving image has error " + JSON.stringify(err));
-        // this.debug.push("saved picture " + (res));
-        // Reload the file list
-        // Improve by only loading for the new image and unshifting array!
-        // await this.loadFileData();
-        // return res;
     }
 
+    /**
+     * Creates the directory for local storage
+     */
     async createDirectory() {
         const [err, res] = await Filesystem.mkdir({
             path: IMAGE_DIR,
@@ -91,13 +97,17 @@ export class PhotoUtils implements OnInit {
             throw new Error(err);
         } else {
             this.log.debug("createDirectory: success: " + JSON.stringify(res));
-            return res;
         }
     }
 
+    /**
+     * Gets a photo from local disk (if mobile) or session storage (if web)
+     * @returns base64 encoded image
+     */
     async loadProfilePic() {
+        
         //check for mobile device 
-        //otherwise assume web
+        //otherwise assume web and store in session
         if (this.plt.is('hybrid')) {
             const filePath = `${IMAGE_DIR}/${this.profilePath}`;
             const [err, res] = await Filesystem.readFile({
@@ -115,8 +125,7 @@ export class PhotoUtils implements OnInit {
             
             }
         } else {
-            //todo handle this better
-            return "";
+            return sessionStorage.getItem(PROFILE_PIC);
         }   
     }
 
