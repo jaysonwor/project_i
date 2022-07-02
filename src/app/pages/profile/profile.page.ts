@@ -20,7 +20,7 @@ export class ProfilePage implements OnInit {
   loadingPic: boolean = false;
 
   constructor(
-    private cognitoService: CognitoService,
+    public cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toast: ToastUtil,

@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Forgot Password</ion-title>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
@@ -16,12 +16,15 @@
             <ion-item lines="full">
               <ion-label position="floating">Email </ion-label>
               <ion-input required type="email" formControlName="email"></ion-input>
+              <ion-icon name="mail" slot="start"></ion-icon>
             </ion-item>
             <div class="validation-errors">
               <ng-container *ngFor="let validation of appConstants.validation_messages.email">
                 <div class="error-message"
                   *ngIf="form.get('email').hasError(validation.type) && (form.get('email').dirty || form.get('email').touched)">
+                  <ion-item lines="none" color="danger">
                   {{ validation.message }}
+                  </ion-item>
                 </div>
               </ng-container>
             </div>

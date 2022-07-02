@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Confirm User Signup</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -16,12 +16,15 @@
             <ion-item lines="full">
               <ion-label position="floating">Verification Code </ion-label>
               <ion-input required type="text" formControlName="verifyCode"></ion-input>
+              <ion-icon name="code" slot="start"></ion-icon>
             </ion-item>
             <div class="validation-errors">
               <ng-container *ngFor="let validation of appConstants.validation_messages.verifyCode">
                 <div class="error-message"
                   *ngIf="form.get('verifyCode').hasError(validation.type) && (form.get('verifyCode').dirty || form.get('verifyCode').touched)">
+                  <ion-item lines="none" color="danger">
                   {{ validation.message }}
+                  </ion-item>
                 </div>
               </ng-container>
             </div>

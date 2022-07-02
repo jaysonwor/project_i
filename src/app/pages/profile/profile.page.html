@@ -1,5 +1,4 @@
 <ion-content>
-
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
@@ -24,19 +23,22 @@
         <ion-label>
           <ion-text>Email</ion-text>
           <p>
-            <ion-text color="dark">nyk@xyz.com</ion-text>
+            <ion-text color="dark">{{ cognitoService.email }}</ion-text>
           </p>
         </ion-label>
       </ion-item>
       <ion-item lines="full">
         <ion-label position="floating">Name</ion-label>
         <ion-input required type="text" formControlName="name"></ion-input>
+        <ion-icon name="person" slot="start"></ion-icon>
       </ion-item>
       <div class="validation-errors">
         <ng-container *ngFor="let validation of appConstants.validation_messages.name">
           <div class="error-message"
             *ngIf="form.get('name').hasError(validation.type) && (form.get('name').dirty || form.get('name').touched)">
+            <ion-item lines="none" color="danger">
             {{ validation.message }}
+            </ion-item>
           </div>
         </ng-container>
       </div>
@@ -50,6 +52,4 @@
       </ion-row>
     </form>
   </ion-card>
-
 </ion-content>
-
