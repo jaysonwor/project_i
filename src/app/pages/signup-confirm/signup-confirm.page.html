@@ -38,10 +38,10 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button color="none" expand="full" type="button" [disabled]="!form.valid || loading" (click)="resend()">
+          <button mat-stroked-button (click)="resend()" disabled="{{loading}}">
             <div *ngIf="!loading">Resend Code?</div>
             <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-          </ion-button>
+          </button>
         </ion-col>
       </ion-row>
     </div>
