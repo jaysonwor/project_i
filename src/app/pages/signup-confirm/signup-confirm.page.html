@@ -1,52 +1,53 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Confirm User Signup</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="none">
+    <img src="/assets/logo-sample.gif" width="200vw" height="50vh">
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="ion-padding-top">
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item>
-              <mat-hint>Enter the code that was sent to, {{ email }}, in order to complete the signup process</mat-hint>
-            </ion-item>
-            <ion-item lines="full">
-              <ion-label position="floating">Verification Code </ion-label>
-              <ion-input required type="text" formControlName="verifyCode"></ion-input>
-              <ion-icon name="code" slot="start"></ion-icon>
-            </ion-item>
-            <div class="validation-errors">
-              <ng-container *ngFor="let validation of appConstants.validation_messages.verifyCode">
-                <div class="error-message"
-                  *ngIf="form.get('verifyCode').hasError(validation.type) && (form.get('verifyCode').dirty || form.get('verifyCode').touched)">
-                  <ion-item lines="none" color="danger">
-                  {{ validation.message }}
+  <div class="card-center">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Confirm User Signup</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="ion-padding-top">
+            <ion-row>
+              <ion-col>
+                <ion-list>
+                  <ion-item color="warning">
+                    <ion-label>
+                      Enter the code that was sent to, {{ email }}, in order to complete the signup process
+                    </ion-label>
                   </ion-item>
-                </div>
-              </ng-container>
-            </div>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
-            <div *ngIf="!loading">Confirm</div>
-            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <button mat-stroked-button (click)="resend()" disabled="{{loading}}">
-            <div *ngIf="!loading">Resend Code?</div>
-            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-          </button>
-        </ion-col>
-      </ion-row>
-    </div>
-  </form>
+                  <ion-item lines="full">
+                    <ion-label position="floating"><ion-icon name="code" slot="start"></ion-icon> Verification Code </ion-label>
+                    <ion-input required type="text" formControlName="verifyCode"></ion-input>                    
+                    <app-error [key]="appConstants.validation_messages.verifyCode" [form]="form.get('verifyCode')"></app-error>
+                  </ion-item>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+                  <div *ngIf="!loading">Confirm</div>
+                  <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+                </button>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <button mat-stroked-button (click)="resend()" disabled="{{loading}}">
+                  <div *ngIf="!loading">Resend Code?</div>
+                  <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+                </button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </ion-content>

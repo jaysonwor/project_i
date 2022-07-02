@@ -8,6 +8,7 @@ import { SignupConfirmPageRoutingModule } from './signup-confirm-routing.module'
 
 import { SignupConfirmPage } from './signup-confirm.page';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
+import { ErrorComponent } from 'src/app/components/error/error.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { MaterialAppModule } from 'src/app/ngmaterial.module';
     SignupConfirmPageRoutingModule,
     MaterialAppModule
   ],
-  declarations: [SignupConfirmPage]
+  declarations: [SignupConfirmPage, ErrorComponent]
 })
 export class SignupConfirmPageModule {}

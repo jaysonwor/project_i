@@ -1,6 +1,6 @@
-<ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Forgot Password</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar color="none">
+    <img src="/assets/logo-sample.gif" width="200vw" height="50vh">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -8,37 +8,43 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate >
-    <div class="ion-padding-top">
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item lines="full">
-              <ion-label position="floating">Email </ion-label>
-              <ion-input required type="email" formControlName="email"></ion-input>
-              <ion-icon name="mail" slot="start"></ion-icon>
-            </ion-item>
-            <div class="validation-errors">
-              <ng-container *ngFor="let validation of appConstants.validation_messages.email">
-                <div class="error-message"
-                  *ngIf="form.get('email').hasError(validation.type) && (form.get('email').dirty || form.get('email').touched)">
-                  <ion-item lines="none" color="danger">
-                  {{ validation.message }}
+  <div class="card-center">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Forgot Password</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="ion-padding-top">
+            <ion-row>
+              <ion-col>
+                <ion-list>
+                  <ion-item lines="full">
+                    <ion-label position="floating">
+                      <ion-icon name="mail" slot="start"></ion-icon> Email
+                    </ion-label>
+                    <ion-input required type="email" formControlName="email"></ion-input>
+                    <app-error [key]="appConstants.validation_messages.email" [form]="form.get('email')"></app-error>
                   </ion-item>
-                </div>
-              </ng-container>
-            </div>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
-            <div *ngIf="!loading">Continue</div>
-            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </div>
-  </form>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+                  <div *ngIf="!loading">Continue</div>
+                  <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+                </button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </form>
+        <ion-row>
+          <ion-col>
+            <a mat-button [routerLink]="['/login']">Return to login</a>
+          </ion-col>
+        </ion-row>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </ion-content>

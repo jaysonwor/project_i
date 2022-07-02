@@ -24,3 +24,38 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+mat-hint {
+    font-size: 10px;
+}
+
+.error-message {
+    font-size: 10px;
+}
+
+a, button {
+    width: 100%;
+}
+
+ion-content {
+    // --background: url("/assets/dots-background.jpeg");
+    --background: url(/assets/dots-background1.png) no-repeat center/cover fixed;
+}
+
+.mat-card {
+    opacity: 0.95;
+}
+
+mat-error {
+    font-size: 12px;
+}
+
+.card-center{
+    // width:80%; // adjust width on your ion-card suitable on your screen
+    // display:block;
+    // margin: 0 auto;
+    height: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+}

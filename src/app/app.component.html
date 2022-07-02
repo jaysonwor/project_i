@@ -35,7 +35,7 @@
           <ion-label>Errors</ion-label>
         </ion-item>
         <div slot="content" *ngFor="let i of this.log.eoutput">
-          {{ i }}
+          <ion-label>{{ i }}</ion-label>
         </div>
       </ion-accordion>
       <ion-accordion value="second" *ngIf="this.log.woutput.length > 0">
@@ -43,7 +43,7 @@
           <ion-label>Warnings</ion-label>
         </ion-item>
         <div slot="content" *ngFor="let i of this.log.woutput">
-          {{ i }}
+          <ion-label>{{ i }}</ion-label>
         </div>
       </ion-accordion>
       <ion-accordion value="third" *ngIf="this.log.ioutput.length > 0">
@@ -51,7 +51,7 @@
           <ion-label>Info</ion-label>
         </ion-item>
         <div slot="content" *ngFor="let i of this.log.ioutput">
-          {{ i }}
+          <ion-label>{{ i }}</ion-label>
         </div>
       </ion-accordion>
       <ion-accordion value="fourth" *ngIf="this.log.doutput.length > 0">
@@ -59,13 +59,14 @@
           <ion-label>Debug</ion-label>
         </ion-item>
         <div slot="content" *ngFor="let i of this.log.doutput">
-          {{ i }}
+          <ion-label>{{ i }}</ion-label>
         </div>
       </ion-accordion>
     </ion-accordion-group>
 
     <ion-item color="light">
-      <ion-label style="text-align: center;">Copyright (c) 2022. All Rights Reserved</ion-label>
+      <ion-label>Copyright (c) 2022. All Rights Reserved</ion-label>
+      <ion-label>Privacy Policy | Terms of use</ion-label>
     </ion-item>
   </ion-footer>
 </ion-app>

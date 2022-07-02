@@ -1,12 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { LoginForgotPageRoutingModule } from './login-forgot-routing.module';
-
 import { LoginForgotPage } from './login-forgot.page';
+import { ErrorComponent } from 'src/app/components/error/error.component';
+import { MaterialAppModule } from 'src/app/ngmaterial.module';
 
 @NgModule({
   imports: [
@@ -14,8 +13,9 @@ import { LoginForgotPage } from './login-forgot.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    LoginForgotPageRoutingModule
+    LoginForgotPageRoutingModule,
+    MaterialAppModule
   ],
-  declarations: [LoginForgotPage]
+  declarations: [LoginForgotPage, ErrorComponent]
 })
 export class LoginForgotPageModule {}

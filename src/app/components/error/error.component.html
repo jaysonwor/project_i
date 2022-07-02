@@ -1,0 +1,10 @@
+<div class="validation-errors">
+  <ng-container *ngFor="let validation of key">
+    <div class="error-message"
+      *ngIf="form.hasError(validation.type) && (form.dirty || form.touched)">
+      <mat-error lines="none" color="danger">
+        <ion-icon name="warning" slot="start"></ion-icon> {{ validation.message }}
+      </mat-error>
+    </div>
+  </ng-container>
+</div>
