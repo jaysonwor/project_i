@@ -146,6 +146,7 @@ export class CognitoService {
    * @param email 
    */
   forgotPassword(email): Promise<any> {
+    const log = this.log;
     return new Promise((resolve, reject) => {
       const cognitoUser = new AWSCognito.CognitoUser({
         Username: email,
@@ -153,15 +154,15 @@ export class CognitoService {
       });
       cognitoUser.forgotPassword({
         onSuccess: function (result) {
-          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
+          log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result)
         },
         onFailure: function (error) {
-          this.log.error(`forgotPassword.error: ${error}`);
+          log.error(`forgotPassword.error: ${error}`);
           reject(error)
         },
         inputVerificationCode: function (result) {
-          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
+          log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result)
         }
       })
@@ -175,6 +176,7 @@ export class CognitoService {
    * @param password 
    */
   confirmNewPassword(email: string, verificationCode: string, password: string): Promise<any> {
+    const log = this.log;
     return new Promise((resolve, reject) => {
       const cognitoUser = new AWSCognito.CognitoUser({
         Username: email,
@@ -182,11 +184,11 @@ export class CognitoService {
       });
       cognitoUser.confirmPassword(verificationCode, password, {
         onSuccess: function (result) {
-          this.log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
+          log.debug(`forgotPassword.success: ${JSON.stringify(result)}`);
           resolve(result);
         },
         onFailure: function (error) {
-          this.log.error(`forgotPassword.error: ${error}`);
+          log.error(`forgotPassword.error: ${error}`);
           switch (error.name) {
             case "LimitExceededException": {
               error.message = error.message;

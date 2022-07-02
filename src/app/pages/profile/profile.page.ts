@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-// import { LoadingController, Platform, ToastController } from '@ionic/angular';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { Filesystem, Directory } from '@capacitor/filesystem';
 import { Router } from '@angular/router';
-import { Storage } from '@ionic/storage';
-// import { ImagePicker } from '@awesome-cordova-plugins/image-picker/ngx';
-// import { ImagePicker } from '@ionic-native/image-picker/ngx';
-// import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
@@ -19,14 +13,13 @@ import { PhotoUtils } from 'src/app/utils/photo';
 export class ProfilePage implements OnInit {
 
   debug: String[] = [];
-  // images: LocalFile[] = [];
   form: FormGroup;
   name: string;
   imgPreview: any = '';
-  // private static _directory = Directory.Cache;
+  loading: boolean = false;
+  loadingPic: boolean = false;
 
   constructor(
-    // private plt: Platform,
     private cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
@@ -37,14 +30,11 @@ export class ProfilePage implements OnInit {
 
   async ionViewWillEnter() {
     this.getAttributes();
-    // this.log.reset();
   }
 
   async ngOnInit() {
     this.getAttributes();
     this.form = this.formBuilder.group({
-      // email: ['', [Validators.required
-      // ]],      
       name: [this.name, [Validators.required
       ]],
     })
@@ -53,14 +43,18 @@ export class ProfilePage implements OnInit {
   }
 
   submit() {
-    this.cognitoService.updateAttributes(this.formatAttributes()).then(
+    this.loading = true;
+    this.cognitoService.updateAttributes(this.formatAttributes())
+    .then(
       res => {
         this.toast.success("Profile updated");
       },
       err => {
         this.toast.error(err.message);
       }
-    )
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
   private formatAttributes() {
@@ -79,6 +73,7 @@ export class ProfilePage implements OnInit {
   }
 
   async selectImage() {
+    this.loadingPic = true;
     const [err, res] = await this.photo.chooseImage().
       then(v => [null, v], err => [err, null]);
 
@@ -88,6 +83,7 @@ export class ProfilePage implements OnInit {
       this.imgPreview = res;
       //todo save to s3
     }
+    this.loadingPic = false;
 
   }
 

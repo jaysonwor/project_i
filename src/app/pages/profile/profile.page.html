@@ -12,12 +12,12 @@
   <ion-grid class="main-header">
     <div align="center">
       <ion-avatar>
-        <img src="{{ imgPreview }}" (click)="selectImage()">
-        <!-- <mg src= [src]="file.data" (click)="selectImage()"></mg> -->
+        <img *ngIf="!loadingPic" src="{{ imgPreview }}" (click)="selectImage()">
+        <ion-spinner name="dots" *ngIf="loadingPic"></ion-spinner>
       </ion-avatar>
     </div>
   </ion-grid>
-<!-- {{ imgPreview }} -->
+
   <ion-card lines="full">
     <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <ion-item>
@@ -42,7 +42,10 @@
       </div>
       <ion-row>
         <ion-col>
-          <ion-button [disabled]="!form.valid" expand="block" type="submit">Update</ion-button>
+          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+            <div *ngIf="!loading">Update</div>
+            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+          </ion-button>
         </ion-col>
       </ion-row>
     </form>

@@ -14,6 +14,7 @@ import { environment } from '../../../environments/environment';
 export class LoginPage implements OnInit {
 
   form: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private cognitoService: CognitoService,
@@ -34,6 +35,7 @@ export class LoginPage implements OnInit {
 
   submit() {
     if (!this.form.valid) return false;
+    this.loading = true;
     this.cognitoService.authenticate(this.form.controls.email.value, this.form.controls.password.value)
       .then((res: any) => {
         this.router.navigate(['home']);
@@ -45,6 +47,8 @@ export class LoginPage implements OnInit {
         } else {
           this.toast.error(err.message);                  
         }        
+      }).finally(() => {
+        this.loading = false;
       });
   }
 

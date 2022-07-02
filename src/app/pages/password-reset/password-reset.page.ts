@@ -15,6 +15,7 @@ export class PasswordResetPage implements OnInit {
 
   form: FormGroup;
   email: string;
+  loading: boolean = false;
   private sub: any;
 
   constructor(
@@ -31,12 +32,12 @@ export class PasswordResetPage implements OnInit {
       verifyCode: ['', [Validators.required
       ]],
       password: ['', [Validators.required,
-                      Validators.minLength(8), 
-                      Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
+      Validators.minLength(8),
+      Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$")
       ]],
       confirmPassword: ['', [Validators.required,
       ]]
-    }, { 
+    }, {
       validator: CustomValidator.mustMatch('password', 'confirmPassword')
     })
     //extracts param from the url
@@ -50,6 +51,7 @@ export class PasswordResetPage implements OnInit {
   }
 
   submit() {
+    this.loading = true;
     this.cognitoService.confirmNewPassword(
       this.email,
       this.form.controls.verifyCode.value,
@@ -62,8 +64,8 @@ export class PasswordResetPage implements OnInit {
       err => {
         this.toast.error(err.message);
       }
-    )
+    ).finally(() => {
+      this.loading = false;
+    });
   }
-
-
 }

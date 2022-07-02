@@ -39,17 +39,18 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button [disabled]="!form.valid" expand="block" type="submit">Login</ion-button>
+          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+            <div *ngIf="!loading">Login</div>
+            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+          </ion-button>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button expand="full" [routerLink]="['/signup']">SignUp</ion-button>
+          <ion-button color="none" expand="full" [routerLink]="['/signup']">Not signed up?</ion-button>
         </ion-col>
-      </ion-row>
-      <ion-row>
         <ion-col>
-          <ion-button expand="full" [routerLink]="['/login-forgot']">Forgot Password</ion-button>
+          <ion-button color="none" expand="full" [routerLink]="['/login-forgot']">Forgot your password?</ion-button>
         </ion-col>
       </ion-row>
     </div>

@@ -13,6 +13,7 @@ import { ToastUtil } from 'src/app/utils/toast';
 export class LoginForgotPage implements OnInit {
 
   form: FormGroup;
+  loading: boolean = false;
 
   constructor(
     private cognitoService: CognitoService,
@@ -31,15 +32,18 @@ export class LoginForgotPage implements OnInit {
   }
 
   submit() {
-    this.cognitoService.forgotPassword(this.form.controls.email.value).then(
+    this.loading = true;
+    this.cognitoService.forgotPassword(this.form.controls.email.value)
+    .then(
       res => {
         this.router.navigate(['password-reset', this.form.controls.email.value]);
       },
       err => {
         this.toast.error(err.message);
       }
-    )
-
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
 

@@ -12,6 +12,7 @@ import { CustomValidator } from 'src/app/validators/custom.validator';
 })
 export class SecuritySettingsPage implements OnInit {
   form: any;
+  loading: boolean = false;
 
   constructor(
     private cognitoService: CognitoService,
@@ -36,6 +37,7 @@ export class SecuritySettingsPage implements OnInit {
   }
 
   submit() {
+    this.loading = true;
     this.cognitoService.changePassword(
       this.cognitoService.email,
       this.form.controls.currentPassword.value,
@@ -50,7 +52,9 @@ export class SecuritySettingsPage implements OnInit {
         }
         this.toast.error(err.message)
       }
-    );
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
 }

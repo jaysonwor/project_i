@@ -30,7 +30,10 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button [disabled]="!form.valid" expand="block" type="submit">Continue</ion-button>
+          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+            <div *ngIf="!loading">Continue</div>
+            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+          </ion-button>
         </ion-col>
       </ion-row>
     </div>

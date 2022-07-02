@@ -13,6 +13,7 @@ import { CustomValidator } from 'src/app/validators/custom.validator';
 export class SignupPage implements OnInit {
 
   form: FormGroup;  
+  loading: boolean = false;
 
   constructor(
     private cognitoService: CognitoService,
@@ -39,6 +40,7 @@ export class SignupPage implements OnInit {
   }
 
   submit() {
+    this.loading = true;
     this.cognitoService.signUp(
       this.form.controls.email.value,
       this.form.controls.password.value
@@ -49,7 +51,9 @@ export class SignupPage implements OnInit {
       err => {
         this.toast.error(err.message); 
       }
-    );
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
 
