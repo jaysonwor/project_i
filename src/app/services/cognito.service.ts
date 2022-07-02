@@ -67,6 +67,7 @@ export class CognitoService {
    * @returns Promise<resolve, reject>
    */
   confirmUser(verificationCode, email): Promise<any> {
+    const log = this.log;
     return new Promise((resolve, reject) => {
       const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
 
@@ -77,10 +78,10 @@ export class CognitoService {
 
       cognitoUser.confirmRegistration(verificationCode, true, function (err, result) {
         if (err) {
-          this.log.error(`confirmUser.error: ${err}`);
+          log.error(`confirmUser.error: ${err}`);
           reject(err);
         } else {
-          this.log.debug(`confirmUser.success: ${JSON.stringify(result)}`);
+          log.debug(`confirmUser.success: ${JSON.stringify(result)}`);
           resolve(result);
         }
       });

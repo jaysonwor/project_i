@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { PasswordResetPageRoutingModule } from './password-reset-routing.module';
 
 import { PasswordResetPage } from './password-reset.page';
+import { MaterialAppModule } from 'src/app/ngmaterial.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { PasswordResetPage } from './password-reset.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    PasswordResetPageRoutingModule
+    PasswordResetPageRoutingModule,
+    MaterialAppModule
   ],
   declarations: [PasswordResetPage]
 })

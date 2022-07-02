@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { SecuritySettingsPageRoutingModule } from './security-settings-routing.module';
 
 import { SecuritySettingsPage } from './security-settings.page';
+import { MaterialAppModule } from 'src/app/ngmaterial.module';
 
 @NgModule({
   imports: [
@@ -14,7 +15,8 @@ import { SecuritySettingsPage } from './security-settings.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    SecuritySettingsPageRoutingModule
+    SecuritySettingsPageRoutingModule,
+    MaterialAppModule
   ],
   declarations: [SecuritySettingsPage]
 })

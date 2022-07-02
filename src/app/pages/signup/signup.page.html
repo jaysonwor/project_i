@@ -28,7 +28,7 @@
             <ion-item lines="full">
               <ion-label position="floating">Password</ion-label>
               <ion-input required type="password" formControlName="password"></ion-input>
-              <div>Password policy: uppercase letters, lowercase letters, special characters, numbers</div>
+              <mat-hint>{{ appConstants.password_policy }}</mat-hint>
             </ion-item>
             <div class="validation-errors">
               <ng-container *ngFor="let validation of appConstants.validation_messages.password">

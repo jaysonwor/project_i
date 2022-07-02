@@ -11,7 +11,7 @@
         <ion-col>
           <ion-list>
             <ion-item>
-              Enter the code that was sent to, {{ email }}, in order to complete the signup process
+              <mat-hint>Enter the code that was sent to, {{ email }}, in order to complete the signup process</mat-hint>
             </ion-item>
             <ion-item lines="full">
               <ion-label position="floating">Verification Code </ion-label>
@@ -30,12 +30,18 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button [disabled]="!form.valid" expand="block" type="submit">Confirm</ion-button>
+          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+            <div *ngIf="!loading">Confirm</div>
+            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+          </ion-button>
         </ion-col>
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-button ion-button class="submit-btn" expand="full" (click)="resend()">Resend Code?</ion-button>
+          <ion-button color="none" expand="full" type="button" [disabled]="!form.valid || loading" (click)="resend()">
+            <div *ngIf="!loading">Resend Code?</div>
+            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+          </ion-button>
         </ion-col>
       </ion-row>
     </div>

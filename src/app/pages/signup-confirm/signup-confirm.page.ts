@@ -14,6 +14,7 @@ export class SignupConfirmPage implements OnInit {
 
   form: FormGroup;
   email: string;
+  loading: boolean = false;
   private sub: any;
 
   constructor(
@@ -40,6 +41,7 @@ export class SignupConfirmPage implements OnInit {
   }
 
   submit() {
+    this.loading = true;
     this.cognitoService.confirmUser(
       this.form.controls.verifyCode.value,
       this.email
@@ -51,10 +53,13 @@ export class SignupConfirmPage implements OnInit {
       err => {
         this.toast.error(err.message);
       }
-    );
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
   resend() {
+    this.loading = true;
     this.cognitoService.resendCode(this.email).then(
       res => {
         this.toast.info("Code resent, check email");
@@ -62,7 +67,9 @@ export class SignupConfirmPage implements OnInit {
       err => {
         this.toast.error(err.message);
       }
-    );
+    ).finally(() => {
+      this.loading = false;
+    });
   }
 
 
