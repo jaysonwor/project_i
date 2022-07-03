@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostBinding, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from "@angular/forms"
 import { Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
 import { environment } from '../../../environments/environment';
-
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -15,12 +15,15 @@ export class LoginPage implements OnInit {
 
   form: FormGroup;
   loading: boolean = false;
+  showLogo: boolean = true;
 
   constructor(
     private cognitoService: CognitoService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
+    private cdr: ChangeDetectorRef,
+    private screenOrientation: ScreenOrientation,
     public appConstants: AppConstants) {
   }
 
@@ -30,7 +33,8 @@ export class LoginPage implements OnInit {
       ]],
       password: [environment.p, [Validators.required
       ]],
-    })
+    });
+    this.orient();
   }
 
   submit() {
@@ -50,6 +54,21 @@ export class LoginPage implements OnInit {
       }).finally(() => {
         this.loading = false;
       });
+  }
+
+  orient() {
+    this.screenOrientation.onChange().subscribe(
+      () => {
+        if (
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY) {
+          this.showLogo = false;
+        } else {
+          this.showLogo = true;
+        }
+        this.cdr.detectChanges();
+      }
+    );
   }
 
 }

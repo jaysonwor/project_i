@@ -1,16 +1,15 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border" *ngIf="showLogo">
   <ion-toolbar color="none">
     <img src="/assets/logo-sample.gif" width="200vw" height="50vh">
   </ion-toolbar>
 </ion-header>
-
-<ion-content class="ion-padding">
+<ion-content>
   <div class="card-center">
-  <mat-card >
-    <mat-card-header>
-      <mat-card-title>Login</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
+  <ion-card >
+    <ion-card-header>
+      <ion-card-title>Log In</ion-card-title>    
+    </ion-card-header>
+    <ion-card-content>
       <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
         <div class="ion-padding-top">
           <ion-row>
@@ -30,16 +29,6 @@
                   <ion-input required type="password" formControlName="password"></ion-input>
                   <app-error [key]="appConstants.validation_messages.password" [form]="form.get('password')"></app-error>
                 </ion-item>
-                <!-- <div class="validation-errors">
-                  <ng-container *ngFor="let validation of appConstants.validation_messages.password">
-                    <div class="error-message"
-                      *ngIf="form.get('password').hasError(validation.type) && (form.get('password').dirty || form.get('password').touched)">
-                      <ion-item lines="none" color="danger">
-                        {{ validation.message }}
-                      </ion-item>
-                    </div>
-                  </ng-container>
-                </div> -->
               </ion-list>
             </ion-col>
           </ion-row>
@@ -47,7 +36,7 @@
         <ion-row>
           <ion-col>
             <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
-              <div *ngIf="!loading">Login</div>
+              <div *ngIf="!loading">Log In</div>
               <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
             </button>
           </ion-col>
@@ -61,7 +50,7 @@
           <a mat-button [routerLink]="['/login-forgot']">Forgot your password?</a>
         </ion-col>
       </ion-row>
-    </mat-card-content>
-  </mat-card>
+    </ion-card-content>
+  </ion-card>
 </div>
 </ion-content>

@@ -1,16 +1,15 @@
-<ion-header class="ion-no-border">
+<ion-header class="ion-no-border" *ngIf="showLogo">
   <ion-toolbar color="none">
     <img src="/assets/logo-sample.gif" width="200vw" height="50vh">
   </ion-toolbar>
 </ion-header>
-
 <ion-content class="ion-padding">
   <div class="card-center">
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Confirm User Signup</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Confirm User Signup</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="ion-padding-top">
             <ion-row>
@@ -47,7 +46,7 @@
             </ion-row>
           </div>
         </form>
-      </mat-card-content>
-    </mat-card>
+      </ion-card-content>
+    </ion-card>
   </div>
 </ion-content>

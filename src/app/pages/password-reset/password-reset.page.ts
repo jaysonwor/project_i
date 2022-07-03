@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
 import { CustomValidator } from 'src/app/validators/custom.validator';
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 
 @Component({
   selector: 'app-password-reset',
@@ -17,6 +18,7 @@ export class PasswordResetPage implements OnInit {
   email: string;
   loading: boolean = false;
   private sub: any;
+  showLogo: boolean = true;
 
   constructor(
     private cognitoService: CognitoService,
@@ -24,6 +26,8 @@ export class PasswordResetPage implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
+    private cdr: ChangeDetectorRef,
+    private screenOrientation: ScreenOrientation,
     public appConstants: AppConstants) {
   }
 
@@ -44,6 +48,7 @@ export class PasswordResetPage implements OnInit {
     this.sub = this.route.params.subscribe(params => {
       this.email = params['email'];
     });
+    this.orient();
   }
 
   ngOnDestroy() {
@@ -67,5 +72,20 @@ export class PasswordResetPage implements OnInit {
     ).finally(() => {
       this.loading = false;
     });
+  }
+
+  orient() {
+    this.screenOrientation.onChange().subscribe(
+      () => {
+        if (
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY) {
+          this.showLogo = false;
+        } else {
+          this.showLogo = true;
+        }
+        this.cdr.detectChanges();
+      }
+    );
   }
 }

@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
-
+import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 @Component({
   selector: 'app-signup-confirm',
   templateUrl: './signup-confirm.page.html',
@@ -16,6 +16,7 @@ export class SignupConfirmPage implements OnInit {
   email: string;
   loading: boolean = false;
   private sub: any;
+  showLogo: boolean = true;
 
   constructor(
     private cognitoService: CognitoService,
@@ -23,6 +24,8 @@ export class SignupConfirmPage implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
+    private cdr: ChangeDetectorRef,
+    private screenOrientation: ScreenOrientation,
     public appConstants: AppConstants) {
   }
 
@@ -70,6 +73,21 @@ export class SignupConfirmPage implements OnInit {
     ).finally(() => {
       this.loading = false;
     });
+  }
+
+  orient() {
+    this.screenOrientation.onChange().subscribe(
+      () => {
+        if (
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
+          this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY) {
+          this.showLogo = false;
+        } else {
+          this.showLogo = true;
+        }
+        this.cdr.detectChanges();
+      }
+    );
   }
 
 
