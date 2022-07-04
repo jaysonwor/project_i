@@ -57,4 +57,8 @@ export class SecuritySettingsPage implements OnInit {
     });
   }
 
+  setFocus(nextElement) {
+    nextElement.setFocus();
+  }
+
 }

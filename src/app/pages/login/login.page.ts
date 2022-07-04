@@ -47,10 +47,10 @@ export class LoginPage implements OnInit {
         if (err.code == "UserNotConfirmedException") {
           this.router.navigate(['signup-confirm', this.form.controls.email.value]);
         } else if (err.code == "NotAuthorizedException") {
-          this.toast.error(err.message);        
+          this.toast.error(err.message);
         } else {
-          this.toast.error(err.message);                  
-        }        
+          this.toast.error(err.message);
+        }
       }).finally(() => {
         this.loading = false;
       });
@@ -69,6 +69,11 @@ export class LoginPage implements OnInit {
         this.cdr.detectChanges();
       }
     );
+  }
+
+  setFocus(nextElement) {
+    nextElement.setFocus(); //For Ionic 4
+    //nextElement.focus(); //older version
   }
 
 }

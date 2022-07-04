@@ -23,18 +23,18 @@
                 <ion-list>
                   <ion-item lines="full">
                     <ion-label position="floating"> <ion-icon name="key" slot="start"></ion-icon> Current Password </ion-label>
-                    <ion-input required type="password" formControlName="currentPassword"></ion-input>                   
+                    <ion-input #a (keyup.enter)="setFocus(b)" enterkeyhint="next" required type="password" formControlName="currentPassword"></ion-input>                   
                     <app-error [key]="appConstants.validation_messages.currentPassword" [form]="form.get('currentPassword')"></app-error>
                   </ion-item>
                   <ion-item lines="full">
                     <ion-label position="floating"><ion-icon name="key" slot="start"></ion-icon> New Password</ion-label>
-                    <ion-input required type="password" formControlName="password"></ion-input>                    
+                    <ion-input #b (keyup.enter)="setFocus(c)" enterkeyhint="next" required type="password" formControlName="password"></ion-input>                    
                     <mat-hint>{{ appConstants.password_policy }}</mat-hint>
                     <app-error [key]="appConstants.validation_messages.password" [form]="form.get('password')"></app-error>
                   </ion-item>
                   <ion-item lines="full">
                     <ion-label position="floating"> <ion-icon name="key" slot="start"></ion-icon> Confirm Password</ion-label>
-                    <ion-input required type="password" formControlName="confirmPassword"></ion-input>
+                    <ion-input #c (keyup.enter)="setFocus(d)" enterkeyhint="next" required type="password" formControlName="confirmPassword"></ion-input>
                     <app-error [key]="appConstants.validation_messages.confirmPassword" [form]="form.get('confirmPassword')"></app-error>
                   </ion-item>
                 </ion-list>
@@ -42,7 +42,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+                <ion-button #d expand="full" type="submit" [disabled]="!form.valid || loading">
                   <div *ngIf="!loading">Change Password</div>
                   <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
                 </ion-button>

@@ -88,4 +88,8 @@ export class PasswordResetPage implements OnInit {
       }
     );
   }
+
+  setFocus(nextElement) {
+    nextElement.setFocus(); 
+  }
 }

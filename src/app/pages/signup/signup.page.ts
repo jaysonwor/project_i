@@ -76,5 +76,9 @@ export class SignupPage implements OnInit {
     );
   }
 
+  setFocus(nextElement) {
+    nextElement.setFocus();
+  }
+
 
 }

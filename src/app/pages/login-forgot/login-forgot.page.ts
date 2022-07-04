@@ -66,5 +66,9 @@ export class LoginForgotPage implements OnInit {
     );
   }
 
+  setFocus(nextElement) {
+    nextElement.setFocus(); 
+  }
+
 
 }

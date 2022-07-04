@@ -37,12 +37,12 @@
           <ion-label position="floating">
             <ion-icon name="person" slot="start"></ion-icon> Name
           </ion-label>
-          <ion-input required type="text" formControlName="name"></ion-input>
+          <ion-input #a (keyup.enter)="setFocus(b)" enterkeyhint="next" required type="text" formControlName="name"></ion-input>
           <app-error [key]="appConstants.validation_messages.name" [form]="form.get('name')"></app-error>
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+            <ion-button #b expand="full" type="submit" [disabled]="!form.valid || loading">
               <div *ngIf="!loading">Update</div>
               <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
             </ion-button>

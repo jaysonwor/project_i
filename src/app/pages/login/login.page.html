@@ -19,14 +19,14 @@
                   <ion-label position="floating">
                     <ion-icon name="mail" slot="start"></ion-icon> Email
                   </ion-label>
-                  <ion-input required type="email" formControlName="email"></ion-input>
+                  <ion-input #a (keyup.enter)="setFocus(b)" enterkeyhint="next" inputmode="email" required type="email" formControlName="email"></ion-input>
                   <app-error [key]="appConstants.validation_messages.email" [form]="form.get('email')"></app-error>
                 </ion-item>                
                 <ion-item lines="full">
                   <ion-label position="floating">
                     <ion-icon name="key" slot="start"></ion-icon> Password
                   </ion-label>
-                  <ion-input required type="password" formControlName="password"></ion-input>
+                  <ion-input #b (keyup.enter)="setFocus(c)" enterkeyhint="next" required type="password" formControlName="password"></ion-input>
                   <app-error [key]="appConstants.validation_messages.password" [form]="form.get('password')"></app-error>
                 </ion-item>
               </ion-list>
@@ -35,7 +35,7 @@
         </div>
         <ion-row>
           <ion-col>
-            <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+            <button #c enterkeyhint="go" mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
               <div *ngIf="!loading">Log In</div>
               <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
             </button>

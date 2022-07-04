@@ -22,7 +22,7 @@
                   </ion-item>
                   <ion-item lines="full">
                     <ion-label position="floating"><ion-icon name="code" slot="start"></ion-icon> Verification Code </ion-label>
-                    <ion-input required type="text" formControlName="verifyCode"></ion-input>                    
+                    <ion-input #a (keyup.enter)="setFocus(b)" enterkeyhint="next" required type="text" formControlName="verifyCode"></ion-input>                    
                     <app-error [key]="appConstants.validation_messages.verifyCode" [form]="form.get('verifyCode')"></app-error>
                   </ion-item>
                 </ion-list>
@@ -30,7 +30,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <button mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+                <button #b mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
                   <div *ngIf="!loading">Confirm</div>
                   <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
                 </button>

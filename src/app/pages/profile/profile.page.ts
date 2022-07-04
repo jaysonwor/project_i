@@ -15,7 +15,7 @@ export class ProfilePage implements OnInit {
   debug: String[] = [];
   form: FormGroup;
   name: string;
-  imgPreview: any = "/assets/dummy-profile.png"; 
+  imgPreview: any = "/assets/dummy-profile.png";
   loading: boolean = false;
   loadingPic: boolean = false;
 
@@ -40,22 +40,22 @@ export class ProfilePage implements OnInit {
     })
     //todo load from local image or s3
     this.imgPreview = await this.photo.loadProfilePic();
-    if(this.imgPreview == null) this.imgPreview = "/assets/dummy-profile.png";
+    if (this.imgPreview == null) this.imgPreview = "/assets/dummy-profile.png";
   }
 
   submit() {
     this.loading = true;
     this.cognitoService.updateAttributes(this.formatAttributes())
-    .then(
-      res => {
-        this.toast.success("Profile updated");
-      },
-      err => {
-        this.toast.error(err.message);
-      }
-    ).finally(() => {
-      this.loading = false;
-    });
+      .then(
+        res => {
+          this.toast.success("Profile updated");
+        },
+        err => {
+          this.toast.error(err.message);
+        }
+      ).finally(() => {
+        this.loading = false;
+      });
   }
 
   private formatAttributes() {
@@ -85,7 +85,10 @@ export class ProfilePage implements OnInit {
       //todo save to s3
     }
     this.loadingPic = false;
+  }
 
+  setFocus(nextElement) {
+    nextElement.setFocus();
   }
 
 

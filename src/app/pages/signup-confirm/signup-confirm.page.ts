@@ -90,5 +90,9 @@ export class SignupConfirmPage implements OnInit {
     );
   }
 
+  setFocus(nextElement) {
+    nextElement.setFocus();
+  }
+
 
 }
