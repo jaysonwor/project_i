@@ -15,7 +15,7 @@ export class ProfilePage implements OnInit {
   debug: String[] = [];
   form: FormGroup;
   name: string;
-  imgPreview: any = '';
+  imgPreview: any = "/assets/dummy-profile.png"; 
   loading: boolean = false;
   loadingPic: boolean = false;
 
@@ -40,6 +40,7 @@ export class ProfilePage implements OnInit {
     })
     //todo load from local image or s3
     this.imgPreview = await this.photo.loadProfilePic();
+    if(this.imgPreview == null) this.imgPreview = "/assets/dummy-profile.png";
   }
 
   submit() {

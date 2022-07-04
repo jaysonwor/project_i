@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { ProfilePageRoutingModule } from './profile-routing.module';
-
 import { ProfilePage } from './profile.page';
-
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe'
+import { ErrorComponent } from 'src/app/components/error/error.component';
 
 @NgModule({
   imports: [
@@ -18,6 +15,6 @@ import { SanitizerPipe } from '../../pipes/sanitizer.pipe'
     IonicModule,
     ProfilePageRoutingModule
   ],
-  declarations: [ProfilePage, SanitizerPipe]
+  declarations: [ProfilePage, SanitizerPipe, ErrorComponent]
 })
 export class ProfilePageModule {}

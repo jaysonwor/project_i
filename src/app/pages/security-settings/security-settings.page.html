@@ -1,75 +1,56 @@
-<ion-header>
+<ion-header class="box ion-no-border" style="--r1:130%;--r2:71.5%">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Security Settings</ion-title>
+    <ion-title>
+      Security Settings
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
-    <div class="ion-padding-top">
-      <ion-row>
-        <ion-col>
-          <ion-list>
-            <ion-item lines="full">
-              <ion-label position="floating">Current Password </ion-label>
-              <ion-input required type="password" formControlName="currentPassword"></ion-input>
-              <ion-icon name="key" slot="start"></ion-icon>
-            </ion-item>
-            <div class="validation-errors">
-              <ng-container *ngFor="let validation of appConstants.validation_messages.currentPassword">
-                <div class="error-message"
-                  *ngIf="form.get('currentPassword').hasError(validation.type) && (form.get('currentPassword').dirty || form.get('currentPassword').touched)">
-                  <ion-item lines="none" color="danger">
-                  {{ validation.message }}
+  <div class="card-center">
+    <ion-card>
+      <!-- <ion-card-header>
+          <ion-card-title>Log In</ion-card-title>
+        </ion-card-header> -->
+      <ion-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div class="ion-padding-top">
+            <ion-row>
+              <ion-col>
+                <ion-list>
+                  <ion-item lines="full">
+                    <ion-label position="floating"> <ion-icon name="key" slot="start"></ion-icon> Current Password </ion-label>
+                    <ion-input required type="password" formControlName="currentPassword"></ion-input>                   
+                    <app-error [key]="appConstants.validation_messages.currentPassword" [form]="form.get('currentPassword')"></app-error>
                   </ion-item>
-                </div>
-              </ng-container>
-            </div>
-            <ion-item lines="full">
-              <ion-label position="floating">New Password</ion-label>
-              <ion-input required type="password" formControlName="password"></ion-input>
-              <ion-icon name="key" slot="start"></ion-icon>
-              <mat-hint>{{ appConstants.password_policy }}</mat-hint>
-            </ion-item>
-            <div class="validation-errors">
-              <ng-container *ngFor="let validation of appConstants.validation_messages.password">
-                <div class="error-message"
-                  *ngIf="form.get('password').hasError(validation.type) && (form.get('password').dirty || form.get('password').touched)">
-                  <ion-item lines="none" color="danger">
-                  {{ validation.message }}
+                  <ion-item lines="full">
+                    <ion-label position="floating"><ion-icon name="key" slot="start"></ion-icon> New Password</ion-label>
+                    <ion-input required type="password" formControlName="password"></ion-input>                    
+                    <mat-hint>{{ appConstants.password_policy }}</mat-hint>
+                    <app-error [key]="appConstants.validation_messages.password" [form]="form.get('password')"></app-error>
                   </ion-item>
-                </div>
-              </ng-container>
-            </div>
-            <ion-item lines="full">
-              <ion-label position="floating">Confirm Password</ion-label>
-              <ion-input required type="password" formControlName="confirmPassword"></ion-input>
-              <ion-icon name="key" slot="start"></ion-icon>
-            </ion-item>
-            <div class="validation-errors">
-              <ng-container *ngFor="let validation of appConstants.validation_messages.confirmPassword">
-                <div class="error-message"
-                  *ngIf="form.get('confirmPassword').hasError(validation.type) && (form.get('confirmPassword').dirty || form.get('confirmPassword').touched)">
-                  <ion-item lines="none" color="danger">
-                  {{ validation.message }}
+                  <ion-item lines="full">
+                    <ion-label position="floating"> <ion-icon name="key" slot="start"></ion-icon> Confirm Password</ion-label>
+                    <ion-input required type="password" formControlName="confirmPassword"></ion-input>
+                    <app-error [key]="appConstants.validation_messages.confirmPassword" [form]="form.get('confirmPassword')"></app-error>
                   </ion-item>
-                </div>
-              </ng-container>
-            </div>
-          </ion-list>
-        </ion-col>
-      </ion-row>
-      <ion-row>
-        <ion-col>
-          <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
-            <div *ngIf="!loading">Change Password</div>
-            <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </div>
-  </form>
+                </ion-list>
+              </ion-col>
+            </ion-row>
+            <ion-row>
+              <ion-col>
+                <ion-button expand="full" type="submit" [disabled]="!form.valid || loading">
+                  <div *ngIf="!loading">Change Password</div>
+                  <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

@@ -8,6 +8,7 @@ import { SecuritySettingsPageRoutingModule } from './security-settings-routing.m
 
 import { SecuritySettingsPage } from './security-settings.page';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
+import { ErrorComponent } from 'src/app/components/error/error.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { MaterialAppModule } from 'src/app/ngmaterial.module';
     SecuritySettingsPageRoutingModule,
     MaterialAppModule
   ],
-  declarations: [SecuritySettingsPage]
+  declarations: [SecuritySettingsPage, ErrorComponent]
 })
 export class SecuritySettingsPageModule {}

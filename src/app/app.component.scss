@@ -2,3 +2,44 @@ ion-footer ion-label {
     font-size: 12px;
     text-align: center;
 }
+
+.box {
+  height:100%;
+  background-color: var(--ion-color-primary);
+  -webkit-mask:
+    radial-gradient(var(--r1,100%) var(--r2,50%) at top   ,white 79.5%,transparent 80%) top left,
+    radial-gradient(var(--r1,100%) var(--r2,50%) at bottom,transparent 79.5%,white 80%) top center,
+    radial-gradient(var(--r1,100%) var(--r2,50%) at top   ,white 79.5%,transparent 80%) top right;
+  mask:
+    radial-gradient(var(--r1,100%) var(--r2,50%) at top   ,white 79.5%,transparent 80%) top left,
+    radial-gradient(var(--r1,100%) var(--r2,50%) at bottom,transparent 79.5%,white 80%) top center,
+    radial-gradient(var(--r1,100%) var(--r2,50%) at top   ,white 79.5%,transparent 80%) top right;
+   /* adjust the 150% to control the covered area, the bigger the value the bigger the area will be*/
+  -webkit-mask-size:33.4% 150%;
+  -webkit-mask-repeat:no-repeat;
+  mask-size:33.4% 150%;
+  mask-repeat:no-repeat;
+}
+
+// ion-list, ion-row {
+//   // opacity: .5;
+// }
+
+ion-icon {
+  padding: 10px 0px 10px 5px;
+}
+
+// ion-item {
+//   opacity: .9;
+//   --ion-item-background: transparent !important;
+// }
+
+.bottom {
+  position:fixed;
+  bottom: 0;
+  left: 0;
+}
+
+.navbar-nav > .active > a { 
+  background-color: transparent !important; 
+}

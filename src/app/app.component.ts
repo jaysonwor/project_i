@@ -13,6 +13,7 @@ import { AppConstants } from 'src/app/app.constants';
 export class AppComponent {
 
   showLogo: boolean = true;
+  imgPreview: any = "/assets/dummy-profile.png";
 
   navigate: any =
     [
