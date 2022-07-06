@@ -30,7 +30,7 @@
                       <ion-icon name="key" slot="start"></ion-icon> Password
                     </ion-label>
                     <ion-input #b (keyup.enter)="setFocus(c)" enterkeyhint="next" required type="password" formControlName="password"></ion-input>
-                    <mat-hint color="light">{{ appConstants.password_policy }}</mat-hint>
+                    <mat-hint>{{ appConstants.password_policy }}</mat-hint>
                     <app-error [key]="appConstants.validation_messages.password" [form]="form.get('password')"></app-error>
                   </ion-item>
                   <ion-item lines="full">
@@ -45,10 +45,10 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <button #d mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+                <ion-button #d mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading" class="full-width">
                   <div *ngIf="!loading">Signup</div>
                   <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-                </button>
+                </ion-button>
               </ion-col>
             </ion-row>
           </div>

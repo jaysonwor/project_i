@@ -12,9 +12,12 @@
 <ion-content class="ion-padding">
   <ion-grid class="main-header">
     <div align="center">
-      <ion-avatar>
+      <ion-avatar>       
         <img *ngIf="!loadingPic" src="{{ imgPreview }}" (click)="selectImage()">
-        <ion-spinner name="dots" *ngIf="loadingPic"></ion-spinner>
+        <ion-spinner name="dots" *ngIf="loadingPic"></ion-spinner> 
+        <a mat-button (click)="selectImage()">
+          <ion-icon  *ngIf="!loadingPic" name="camera-outline"></ion-icon>
+        </a>
       </ion-avatar>
     </div>
   </ion-grid>
@@ -42,7 +45,7 @@
         </ion-item>
         <ion-row>
           <ion-col>
-            <ion-button #b expand="full" type="submit" [disabled]="!form.valid || loading">
+            <ion-button #b enterkeyhint="go" mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading" class="full-width">
               <div *ngIf="!loading">Update</div>
               <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
             </ion-button>

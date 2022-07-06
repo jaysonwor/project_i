@@ -110,7 +110,7 @@ export class CognitoService {
 
       cognitoUser.authenticateUser(authDetails, {
         onSuccess: result => {
-          this.log.debug(`authenticate.success: ${JSON.stringify(result)}`);
+          this.log.debug(`authenticate.success`);
           resolve(result);
         },
         onFailure: err => {

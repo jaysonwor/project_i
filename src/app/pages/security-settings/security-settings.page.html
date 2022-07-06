@@ -42,7 +42,7 @@
             </ion-row>
             <ion-row>
               <ion-col>
-                <ion-button #d expand="full" type="submit" [disabled]="!form.valid || loading">
+                <ion-button  #d enterkeyhint="go" mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading" class="full-width">
                   <div *ngIf="!loading">Change Password</div>
                   <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
                 </ion-button>

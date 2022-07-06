@@ -6,6 +6,7 @@ import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe'
 import { ErrorComponent } from 'src/app/components/error/error.component';
+import { MaterialAppModule } from 'src/app/ngmaterial.module';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { ErrorComponent } from 'src/app/components/error/error.component';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    ProfilePageRoutingModule
+    ProfilePageRoutingModule,
+    MaterialAppModule
   ],
   declarations: [ProfilePage, SanitizerPipe, ErrorComponent]
 })

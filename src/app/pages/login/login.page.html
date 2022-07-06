@@ -35,10 +35,10 @@
         </div>
         <ion-row>
           <ion-col>
-            <button #c enterkeyhint="go" mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading">
+            <ion-button #c enterkeyhint="go" mat-flat-button color="primary" type="submit" [disabled]="!form.valid || loading" class="full-width">
               <div *ngIf="!loading">Log In</div>
               <ion-spinner name="dots" *ngIf="loading"></ion-spinner>
-            </button>
+            </ion-button>
           </ion-col>
         </ion-row>
       </form>
