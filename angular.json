@@ -21,7 +21,9 @@
               "crypto-js/sha256",
               "isomorphic-unfetch",
               "crypto-js/enc-base64",
-              "rxjs-compat"
+              "rxjs-compat",
+              "aws-sdk/global",
+              "@aws-crypto/sha256-browser"
             ],
             "outputPath": "www",
             "index": "src/index.html",

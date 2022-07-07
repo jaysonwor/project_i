@@ -3,6 +3,9 @@ import * as AWSCognito from "amazon-cognito-identity-js";
 import { environment } from '../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Log } from '../utils/log';
+import * as AWS from "aws-sdk/global";
+import * as CognitoIdentity from "aws-sdk/clients/cognitoidentity";
+import { AppConstants } from '../app.constants';
 
 /**
  * Cognito service class
@@ -13,7 +16,9 @@ import { Log } from '../utils/log';
 })
 export class CognitoService {
 
-  constructor(private log: Log) { }
+  constructor(
+    private log: Log,
+    public appConstants: AppConstants) { }
 
   /**
    * User creation function
@@ -89,12 +94,12 @@ export class CognitoService {
   }
 
   /**
-   * Authenticate user function
+   * Authenticates an existing cognito user and creates a new user session 
    * @param email 
    * @param password 
    * @returns Promise<resolve, reject>
    */
-  authenticate(email, password): Promise<any> {
+  async authenticate(email, password): Promise<any> {
     return new Promise((resolve, reject) => {
       const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
 
@@ -109,9 +114,26 @@ export class CognitoService {
       });
 
       cognitoUser.authenticateUser(authDetails, {
-        onSuccess: result => {
-          this.log.debug(`authenticate.success`);
-          resolve(result);
+        onSuccess: async result => {
+          // this.log.debug(`authenticate.success: ${JSON.stringify(result)}`);
+          // const accessToken = result.getAccessToken().getJwtToken();
+          // const creds = this.buildCognitoCreds(accessToken);
+          // AWS.config.credentials = creds;
+          // this.log.debug(`authenticate.success: ${JSON.stringify(AWS.config.credentials)}`);
+          // let creds = await this.buildCognitoCreds(result.getIdToken().getJwtToken())
+          const [err, res] = await this.buildCognitoCreds(result.getIdToken().getJwtToken()).
+            then(v => [null, v], err => [err, null]);
+
+          if (err) {
+            this.log.error(`authenticate.error: ${err}`);
+            reject(err);
+          } else {
+            this.log.debug(`authenticate.success: ${JSON.stringify(res)}`);
+            sessionStorage.setItem(this.appConstants.ACCESSKEY, AWS.config.credentials.accessKeyId);
+            sessionStorage.setItem(this.appConstants.SACCESSKEY, AWS.config.credentials.secretAccessKey);
+            sessionStorage.setItem(this.appConstants.SESSIONTOKEN, AWS.config.credentials.sessionToken);
+            resolve(result);
+          }
         },
         onFailure: err => {
           this.log.error(`authenticate.error: ${err}`);
@@ -141,6 +163,136 @@ export class CognitoService {
       });
     });
   }
+
+  /**
+   * Get the temp token from the identity pool for apig authorization
+   * @param idTokenJwt 
+   * @returns identity
+   */
+  private buildCognitoCreds(idTokenJwt: string): Promise<any> {
+    AWS.config.region = environment.region;
+    let url = 'cognito-idp.' + environment.region + '.amazonaws.com/' + environment.cognito.UserPoolId;
+
+    const creds = new AWS.CognitoIdentityCredentials({
+      IdentityPoolId: environment.identityPoolId, // your identity pool id here
+      Logins: {
+        [url]: idTokenJwt
+      }
+    });
+
+    return new Promise((resolve, reject) => {
+      creds.refresh((error) => {
+        if (error) {
+          reject(error);
+        } else {
+          // console.log('Successfully logged!');
+          // this.log.debug(creds)
+          AWS.config.credentials = creds;
+          // this.setCognitoCreds(creds);
+          resolve(creds);
+        }
+      });
+    });
+  }
+  // AWS.config.region = environment.region;
+  // let creds = this.getCognitoIdentityCredentials(idTokenJwt)
+
+  // return new Promise((resolve, reject) => {
+  //     this.refresh(creds)
+  //         .then((creds) => {
+  //             resolve(creds)
+  //         })
+  //         .catch((error) => {
+  //             // if (this.getCognitoCreds() != null) this.getCognitoCreds().clearCachedId()
+  //             this.refresh(creds)
+  //                 .then((creds) => {
+  //                     resolve(creds)
+  //                 })
+  //                 .catch((error) => {
+  //                     console.error(error);
+  //                     reject(error)
+  //                 })
+  //         })
+  // })
+
+  // }
+
+  // private refresh(creds){
+  //     return new Promise((resolve, reject) => {
+  //         creds.refresh((error) => {
+  //             if (error) { 
+  //               this.log.debug(error)                   
+  //                 reject(error)
+  //             } else {
+  //                 console.log('Successfully logged!');
+  //                 this.log.debug(creds)
+  //                 AWS.config.credentials = creds;
+  //                 // this.setCognitoCreds(creds);
+  //                 resolve(creds)
+  //             }
+  //         });
+  //     })
+  // }
+
+
+  // public getLoginsMap(idTokenJwt: string) {
+  //   let url = 'cognito-idp.' + environment.region + '.amazonaws.com/' + environment.cognito.UserPoolId;
+  //   let logins: CognitoIdentity.LoginsMap = {};
+  //   logins[url] = idTokenJwt;
+  //   return logins;
+  // }
+
+  // private async buildCognitoCreds(idTokenJwt: string) {
+
+  //   //POTENTIAL: Region needs to be set if not already set previously elsewhere.
+  //   AWS.config.region = environment.region;
+  //   let url = 'cognito-idp.' + environment.region + '.amazonaws.com/' + environment.cognito.UserPoolId;
+
+  //   const creds = new AWS.CognitoIdentityCredentials({
+  //     IdentityPoolId: environment.identityPoolId, // your identity pool id here
+  //     Logins: {
+  //       // Change the key below according to the specific region your user pool is in.
+  //       [url]: idTokenJwt
+  //     }
+  //   });
+  //   // const creds = AWS.config.credentials;
+  //   const c = await creds.refresh((error) => {
+  //       if (error) {                    
+  //           this.log.debug(error)
+  //       } else {
+  //           console.log('Successfully logged!');
+  //           AWS.config.credentials = creds;
+  //           this.log.debug(AWS.config.credentials);
+  //           return AWS.config.credentials
+  //       }
+  //   });
+
+
+
+  //   return AWS.config.credentials;
+
+  // let creds = this.getCognitoIdentityCredentials(idTokenJwt);
+  // this.log.debug(creds);
+
+  // return new Promise((resolve, reject) => {
+  //   this.refresh(creds)
+  //     .then((creds) => {
+  //       resolve(creds)
+  //     })
+  //     .catch((error) => {
+  //       if (this.getCognitoCreds() != null) this.getCognitoCreds().clearCachedId()
+  //       this.refresh(creds)
+  //         .then((creds) => {
+  //           resolve(creds)
+  //         })
+  //         .catch((error) => {
+  //           console.error(error);
+  //           reject(error)
+  //         })
+  //     })
+  // })
+
+  // }
 
   /**
    * Sends reset password code
@@ -219,13 +371,13 @@ export class CognitoService {
    * @param oldPassword 
    * @param newPassword 
    */
-   async changePassword(email: string, oldPassword: string, newPassword: string) {
+  async changePassword(email: string, oldPassword: string, newPassword: string) {
 
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
     const cognitoUser = userPool.getCurrentUser();
     await new Promise(res => cognitoUser.getSession(res));
 
-    return new Promise((resolve, reject) => {      
+    return new Promise((resolve, reject) => {
 
       cognitoUser.changePassword(oldPassword, newPassword, (error, result) => {
         if (error) {
@@ -264,7 +416,7 @@ export class CognitoService {
 
   getAttributes() {
     let attributes = null
-    let idToken = JSON.parse(sessionStorage.getItem("IDTOKEN"));
+    let idToken = JSON.parse(sessionStorage.getItem(this.appConstants.IDTOKEN));
     const jwtHelper = new JwtHelperService();
     return attributes = jwtHelper.decodeToken(idToken);
   }
@@ -299,25 +451,25 @@ export class CognitoService {
         userPool.getCurrentUser().getSession((err, session) => {
           try {
             if (err) {
-              sessionStorage.setItem("SESSION.ACTIVE", false.toString());
+              sessionStorage.setItem(this.appConstants.SESSION_ACTIVE, false.toString());
               reject(true);
             } else if (session.isValid()) {
-              sessionStorage.setItem("SESSION.ACTIVE", true.toString());
-              sessionStorage.setItem("IDTOKEN", JSON.stringify(session.getIdToken().getJwtToken()));
+              sessionStorage.setItem(this.appConstants.SESSION_ACTIVE, true.toString());
+              sessionStorage.setItem(this.appConstants.IDTOKEN, JSON.stringify(session.getIdToken().getJwtToken()));
 
               resolve(true);
             } else {
-              sessionStorage.setItem("SESSION.ACTIVE", false.toString());
+              sessionStorage.setItem(this.appConstants.SESSION_ACTIVE, false.toString());
               reject(true);
             }
           } catch (e) {
             this.log.error(e);
-            sessionStorage.setItem("SESSION.ACTIVE", false.toString());
+            sessionStorage.setItem(this.appConstants.SESSION_ACTIVE, false.toString());
             reject(true);
           }
         })
       } else {
-        sessionStorage.setItem("SESSION.ACTIVE", false.toString());
+        sessionStorage.setItem(this.appConstants.SESSION_ACTIVE, false.toString());
         reject(true);
       }
     });

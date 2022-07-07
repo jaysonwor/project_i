@@ -6,7 +6,7 @@ import { Log } from "./log";
 
 const IMAGE_DIR = 'stored-images';
 const IMAGE_PARENT_DIR = Directory.Cache;
-const PROFILE_PIC = "PROFILE_PIC";
+const PROFILE_PIC = "PROJECTI.PROFILE_PIC";
 
 @Injectable({
     providedIn: 'root'

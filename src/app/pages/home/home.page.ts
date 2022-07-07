@@ -9,6 +9,7 @@ import { CognitoService } from 'src/app/services/cognito.service';
   styleUrls: ['./home.page.scss'],
 })
 export class HomePage implements OnInit {
+  img = ""
 
   constructor(
     private cognitoService: CognitoService,
@@ -19,8 +20,21 @@ export class HomePage implements OnInit {
   ngOnInit() {
   }
 
-  post() {
-    // this.apiService.post();
+  async post() {
+    // this.img = await this.apiService.post()
+    // this.apiService.post().subscribe((response) => {
+    //   console.log(response);
+    //   this.img = `data:image/jpeg;base64,${response}`;
+    // })
+
+    const [err, res] = await this.apiService.post().
+        then(v => [null, v], err => [err, null]);
+    
+        if(res) {
+          console.log(res.data);
+          this.img = `data:image/jpeg;base64,${res.data}`;
+        }
+    
   }
 
 }

@@ -5,6 +5,12 @@ import { Injectable } from "@angular/core";
 })
 export class AppConstants {
 
+    SESSION_ACTIVE = "PROJECTI.SESSION.ACTIVE";
+    ACCESSKEY = "PROJECTI.ACCESSKEY";
+    SACCESSKEY = "PROJECTI.SACCESSKEY";
+    SESSIONTOKEN = "PROJECTI.SESSIONTOKEN";
+    IDTOKEN = "PROJECTI.IDTOKEN";
+
     logoShow: boolean = true;
     password_policy = "Password policy: uppercase letters, lowercase letters, special characters, numbers";
 

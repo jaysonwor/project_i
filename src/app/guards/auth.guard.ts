@@ -18,7 +18,7 @@ export class AuthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
       
-      let [err, res] = await this.cognitoService.isSessionValid().
+      const [err, res] = await this.cognitoService.isSessionValid().
         then(v => [null, v], err => [err, null]);
       
       if (err) {

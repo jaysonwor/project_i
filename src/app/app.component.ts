@@ -78,7 +78,7 @@ export class AppComponent {
 
 
   get session(): Boolean {
-    return new Boolean(JSON.parse(sessionStorage.getItem("SESSION.ACTIVE")));
+    return new Boolean(JSON.parse(sessionStorage.getItem(this.appConstants.SESSION_ACTIVE)));
   }
 
 }
