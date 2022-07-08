@@ -26,6 +26,8 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
     this.img = await this.photo.loadProfilePic();
+    //todo: for now this needs to come after the first loadProfilePic()
+    this.event.publishFormRefresh();
   }
 
   async post() {

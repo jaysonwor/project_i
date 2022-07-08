@@ -50,8 +50,7 @@ export class LoginPage implements OnInit {
       .then(async (res: any) => {   
         //call this after authenticate and session refresh to reduce the trips to the server 
         //and infer image is persisted locally for during of session
-        await this.apiService.loadPhoto();
-        this.event.publishFormRefresh();
+        await this.apiService.loadPhoto();        
         this.router.navigate(['home']);
       }, async (err) => {
         if (err.code == "UserNotConfirmedException") {
