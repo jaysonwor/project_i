@@ -6,6 +6,9 @@ import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
 import { environment } from '../../../environments/environment';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
+import { ApiService } from 'src/app/services/api.service';
+import { PhotoUtils } from 'src/app/utils/photo';
+import { EventService } from 'src/app/services/event.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -19,10 +22,13 @@ export class LoginPage implements OnInit {
 
   constructor(
     private cognitoService: CognitoService,
+    private apiService: ApiService,
     private router: Router,
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
     private cdr: ChangeDetectorRef,
+    private photo: PhotoUtils,
+    private event: EventService,
     private screenOrientation: ScreenOrientation,
     public appConstants: AppConstants) {
   }
@@ -37,11 +43,15 @@ export class LoginPage implements OnInit {
     this.orient();
   }
 
-  submit() {
+  async submit() {
     if (!this.form.valid) return false;
     this.loading = true;
     this.cognitoService.authenticate(this.form.controls.email.value, this.form.controls.password.value)
-      .then((res: any) => {
+      .then(async (res: any) => {   
+        //call this after authenticate and session refresh to reduce the trips to the server 
+        //and infer image is persisted locally for during of session
+        await this.apiService.loadPhoto();
+        this.event.publishFormRefresh();
         this.router.navigate(['home']);
       }, async (err) => {
         if (err.code == "UserNotConfirmedException") {

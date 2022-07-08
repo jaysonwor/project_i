@@ -5,6 +5,8 @@ import { AppConstants } from 'src/app/app.constants';
 import { CognitoService } from 'src/app/services/cognito.service';
 import { ToastUtil } from 'src/app/utils/toast';
 import { PhotoUtils } from 'src/app/utils/photo';
+import { ApiService } from 'src/app/services/api.service';
+import { EventService } from 'src/app/services/event.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
@@ -25,6 +27,8 @@ export class ProfilePage implements OnInit {
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
     private photo: PhotoUtils,
+    private apiService: ApiService,
+    private event: EventService,
     public appConstants: AppConstants) {
   }
 
@@ -38,9 +42,7 @@ export class ProfilePage implements OnInit {
       name: [this.name, [Validators.required
       ]],
     })
-    //todo load from local image or s3
-    this.imgPreview = await this.photo.loadProfilePic();
-    if (this.imgPreview == null) this.imgPreview = "/assets/dummy-profile.png";
+    this.imgPreview = await this.photo.loadProfilePic();    
   }
 
   submit() {
@@ -81,8 +83,12 @@ export class ProfilePage implements OnInit {
     if (err) {
       this.toast.error(err)
     } else {
-      this.imgPreview = res;
-      //todo save to s3
+      this.imgPreview = res;      
+      //strip type from base64 enc
+      const base64result = res.split(',')[1];
+      // console.log("DEBUG " + base64result);
+      await this.apiService.savePhoto(base64result);
+      this.event.publishFormRefresh();
     }
     this.loadingPic = false;
   }

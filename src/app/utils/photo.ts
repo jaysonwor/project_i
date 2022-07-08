@@ -12,12 +12,14 @@ const PROFILE_PIC = "PROJECTI.PROFILE_PIC";
     providedIn: 'root'
 })
 export class PhotoUtils implements OnInit {
+
     profilePath: string = 'profile' + '.jpeg';
 
     constructor(
         private plt: Platform,
         private log: Log
-    ) { }
+    ) {
+    }
 
     async ngOnInit() {
         if (this.plt.is('hybrid')) {
@@ -49,8 +51,33 @@ export class PhotoUtils implements OnInit {
             this.log.debug("chooseImage: success: " + JSON.stringify(res));
             await this.saveImage(res);
             return await this.loadProfilePic();
-        } 
+        }
 
+    }
+
+    /**
+     * Saves a photo to local disk (for mobile) or in session storage (for web)
+     * @param base64Data 
+     */
+    async saveLocalBase64Image(base64Data) {
+        if (this.plt.is('hybrid')) {
+            const filePath = `${IMAGE_DIR}/${this.profilePath}`;
+            const [err, res] = await Filesystem.writeFile({
+                path: filePath,
+                data: base64Data,
+                directory: IMAGE_PARENT_DIR
+            }).
+                then(v => [null, v], err => [err, null]);
+
+            if (err) {
+                this.log.error("saveImage: error: " + err);
+                throw new Error(err);
+            } else {
+                this.log.debug("saveImage: success: " + JSON.stringify(res));
+            }
+        } else {
+            sessionStorage.setItem(PROFILE_PIC, base64Data);
+        }
     }
 
     /**
@@ -58,6 +85,7 @@ export class PhotoUtils implements OnInit {
      * @param photo 
      */
     async saveImage(photo: Photo) {
+
         const base64Data = await this.readAsBase64(photo);
         const filePath = `${IMAGE_DIR}/${this.profilePath}`;
 
@@ -78,6 +106,7 @@ export class PhotoUtils implements OnInit {
                 this.log.debug("saveImage: success: " + JSON.stringify(res));
             }
         } else {
+            // console.log(base64Data)
             sessionStorage.setItem(PROFILE_PIC, base64Data);
         }
     }
@@ -105,7 +134,7 @@ export class PhotoUtils implements OnInit {
      * @returns base64 encoded image
      */
     async loadProfilePic() {
-        
+
         //check for mobile device 
         //otherwise assume web and store in session
         if (this.plt.is('hybrid')) {
@@ -118,32 +147,21 @@ export class PhotoUtils implements OnInit {
 
             if (err) {
                 this.log.error("loadProfilePic: error: " + err);
-                throw new Error(err);
+                sessionStorage.setItem(PROFILE_PIC, "/assets/dummy-profile.png");
+                return sessionStorage.getItem(PROFILE_PIC);
             } else {
-                // this.log.debug("loadProfilePic: success: " + JSON.stringify(res));
+                //todo: base64 encoded images are inneficient, but do this for now to get all pages to show the pic
+                sessionStorage.setItem(PROFILE_PIC, `data:image/jpeg;base64,${res.data}`);
                 return `data:image/jpeg;base64,${res.data}`;
-            
+
             }
         } else {
+            //todo: base64 encoded images are inneficient, but do this for now to get all pages to show the pic
+            const pic = sessionStorage.getItem(PROFILE_PIC);
+            if (!pic) sessionStorage.setItem(PROFILE_PIC, "/assets/dummy-profile.png");
             return sessionStorage.getItem(PROFILE_PIC);
-        }   
+        }
     }
-
-    // async getFiles() {
-    //     const [err, res] = await Filesystem.readdir({
-    //         path: IMAGE_DIR,
-    //         directory: IMAGE_PARENT_DIR,
-    //     }).
-    //         then(v => [null, v], err => [err, null]);
-
-    //     if (err) {
-    //         this.log.error("getFiles: error: " + err);
-    //         throw new Error(err);
-    //     } else {
-    //         this.log.debug("getFiles: success: " + JSON.stringify(res));
-    //         return res;
-    //     }
-    // }
 
     private async readAsBase64(photo: Photo) {
         if (this.plt.is('hybrid')) {

@@ -1,19 +1,21 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { CognitoService } from './services/cognito.service';
 import { Log } from './utils/log';
 // import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
-import { ToastUtil } from './utils/toast';
 import { AppConstants } from 'src/app/app.constants';
+import { PhotoUtils } from './utils/photo';
+import { ApiService } from './services/api.service';
+import { EventService } from './services/event.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   showLogo: boolean = true;
-  imgPreview: any = "/assets/dummy-profile.png";
+  imgPreview: any = "";
 
   navigate: any =
     [
@@ -48,34 +50,30 @@ export class AppComponent {
     public cognitoService: CognitoService,
     private router: Router,
     // private screenOrientation: ScreenOrientation,
-    // private toast: ToastUtil,
+    public photo: PhotoUtils,
     public log: Log,
     private cdr: ChangeDetectorRef,
-    public appConstants: AppConstants) {
+    private apiService: ApiService,
+    private event: EventService,
+    public appConstants: AppConstants
+    ) { }
+
+  subscription: any;
+
+  async ngOnInit() {
+
+    //resets the log after each navi action
     this.router.events.subscribe((ev) => {
       if (ev instanceof NavigationEnd) {
         this.log.reset();
       }
     });
 
-    // this.orient();
+    //infers the pic was saved in the session storage 
+    this.subscription = this.event.formRefreshSource$.subscribe(data => {
+      this.imgPreview = sessionStorage.getItem("PROJECTI.PROFILE_PIC");
+    });
   }
-
-  // orient() {
-  //   this.screenOrientation.onChange().subscribe(
-  //     () => {
-  //       if (
-  //         this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_PRIMARY ||
-  //         this.screenOrientation.type == this.screenOrientation.ORIENTATIONS.LANDSCAPE_SECONDARY) {
-  //         this.showLogo = false;
-  //       } else {
-  //         this.showLogo = true;
-  //       }
-  //       this.cdr.detectChanges();
-  //     }
-  //   );
-  // }
-
 
   get session(): Boolean {
     return new Boolean(JSON.parse(sessionStorage.getItem(this.appConstants.SESSION_ACTIVE)));
