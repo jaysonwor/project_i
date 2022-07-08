@@ -17,13 +17,13 @@ export class UnauthGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot) {
 
-    const [err, res] = await this.cognitoService.isSessionValid().
-      then(v => [null, v], err => [err, null]);
+    // const [err, res] = await this.cognitoService.isSessionValid().
+    //   then(v => [null, v], err => [err, null]);
 
-    if (res) {
-      this.log.debug("session exists");
-      this.router.navigate(['home']);
-    }
+    // if (res) {
+    //   this.log.debug("session exists");
+    //   this.router.navigate(['home']);
+    // }
 
     return true;
   }

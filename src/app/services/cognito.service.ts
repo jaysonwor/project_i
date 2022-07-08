@@ -50,9 +50,9 @@ export class CognitoService {
   /**
    * Session logout function
    */
-  async logOut() {
+  logOut() {
     const userPool = new AWSCognito.CognitoUserPool(environment.cognito);
-    await userPool.getCurrentUser().signOut();
+    userPool.getCurrentUser().signOut();
     let n = sessionStorage.length;
     while (n--) {
       let key = sessionStorage.key(n);
@@ -324,7 +324,7 @@ export class CognitoService {
   }
 
   get email() {
-    return this.getAttributes()['email'];
+    return (this.getAttributes()) ? this.getAttributes()['email'] : "invalid"
   }
 
   /**
