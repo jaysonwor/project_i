@@ -5,8 +5,8 @@ import { IonicModule } from '@ionic/angular';
 import { ProfilePageRoutingModule } from './profile-routing.module';
 import { ProfilePage } from './profile.page';
 import { SanitizerPipe } from '../../pipes/sanitizer.pipe'
-import { ErrorComponent } from 'src/app/components/error/error.component';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
+import { ErrorModule } from 'src/app/components/error/error.module';
 
 @NgModule({
   imports: [
@@ -15,8 +15,9 @@ import { MaterialAppModule } from 'src/app/ngmaterial.module';
     ReactiveFormsModule,
     IonicModule,
     ProfilePageRoutingModule,
-    MaterialAppModule
+    MaterialAppModule,
+    ErrorModule
   ],
-  declarations: [ProfilePage, SanitizerPipe, ErrorComponent]
+  declarations: [ProfilePage, SanitizerPipe]
 })
 export class ProfilePageModule {}

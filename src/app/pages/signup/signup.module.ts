@@ -3,12 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
-
 import { SignupPageRoutingModule } from './signup-routing.module';
-
 import { SignupPage } from './signup.page';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
-import { ErrorComponent } from 'src/app/components/error/error.component';
+import { ErrorModule } from 'src/app/components/error/error.module';
 
 @NgModule({
   imports: [
@@ -17,8 +15,9 @@ import { ErrorComponent } from 'src/app/components/error/error.component';
     ReactiveFormsModule,
     IonicModule,
     SignupPageRoutingModule,
-    MaterialAppModule
+    MaterialAppModule,
+    ErrorModule
   ],
-  declarations: [SignupPage, ErrorComponent]
+  declarations: [SignupPage]
 })
-export class SignupPageModule {}
+export class SignupPageModule { }

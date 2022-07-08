@@ -1,14 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { SignupConfirmPageRoutingModule } from './signup-confirm-routing.module';
-
 import { SignupConfirmPage } from './signup-confirm.page';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
-import { ErrorComponent } from 'src/app/components/error/error.component';
+import { ErrorModule } from 'src/app/components/error/error.module';
 
 @NgModule({
   imports: [
@@ -17,8 +14,9 @@ import { ErrorComponent } from 'src/app/components/error/error.component';
     ReactiveFormsModule,
     IonicModule,
     SignupConfirmPageRoutingModule,
-    MaterialAppModule
+    MaterialAppModule,
+    ErrorModule
   ],
-  declarations: [SignupConfirmPage, ErrorComponent]
+  declarations: [SignupConfirmPage]
 })
-export class SignupConfirmPageModule {}
+export class SignupConfirmPageModule { }

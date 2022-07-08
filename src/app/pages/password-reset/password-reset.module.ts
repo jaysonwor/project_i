@@ -5,7 +5,7 @@ import { IonicModule } from '@ionic/angular';
 import { PasswordResetPageRoutingModule } from './password-reset-routing.module';
 import { PasswordResetPage } from './password-reset.page';
 import { MaterialAppModule } from 'src/app/ngmaterial.module';
-import { ErrorComponent } from 'src/app/components/error/error.component';
+import { ErrorModule } from 'src/app/components/error/error.module';
 
 @NgModule({
   imports: [
@@ -14,8 +14,9 @@ import { ErrorComponent } from 'src/app/components/error/error.component';
     ReactiveFormsModule,
     IonicModule,
     PasswordResetPageRoutingModule,
-    MaterialAppModule
+    MaterialAppModule,
+    ErrorModule
   ],
-  declarations: [PasswordResetPage, ErrorComponent]
+  declarations: [PasswordResetPage]
 })
 export class PasswordResetPageModule {}
