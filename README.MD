@@ -3,4 +3,4 @@ The purpose of this application is to showcase how to manage videos from a PWA d
 
 ## Conceptual Architecture
 The following depicts the high-level conceptual application structure and flow 
-![Alt text](/assets/concept.png "concept")
+![Alt text](src/assets/concept.png "concept")
