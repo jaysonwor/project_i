@@ -14,10 +14,24 @@ The following depicts the high-level application concept
 - Ionic: https://ionicframework.com/
 - Angular: https://angular.io/
 - NodeJS: https://nodejs.org/en/
+### Deployment (Run in web browser)
+- npm install (run first time after checking out the project)
+- ionic serve
 
-### Deployment
+### Deployment (IOS)
+- npm install (run first time after checking out the project)
+- ionic capacitor run ios
+- select device:
+    - choose from a list of emulated devices or real devices (assuming you have one accessible/connected)
+
+#### Troubleshoot (IOS)
+- Missing Signature
+    - Make sure in Xcode that you have added your team in the signing & capabilities section
+
+### Deployment (Angular)
+- TBD
 
 
-#### Detail Flows
-This is a sequence diagram to give an example of how the authorization works within the application
+## Detail Flows
+This is a sequence diagram to give an example of how the authorization (happy path) works within the application
 ![Alt text](src/assets/auth-sequence.png "auth sequence")
