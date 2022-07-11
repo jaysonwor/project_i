@@ -7,8 +7,6 @@ import { ToastUtil } from 'src/app/utils/toast';
 import { environment } from '../../../environments/environment';
 import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { ApiService } from 'src/app/services/api.service';
-import { PhotoUtils } from 'src/app/utils/photo';
-import { EventService } from 'src/app/services/event.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -27,20 +25,18 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder,
     private toast: ToastUtil,
     private cdr: ChangeDetectorRef,
-    private photo: PhotoUtils,
-    private event: EventService,
     private screenOrientation: ScreenOrientation,
     public appConstants: AppConstants) {
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.form = this.formBuilder.group({
       email: [environment.u, [Validators.required
       ]],
       password: [environment.p, [Validators.required
       ]],
     });
-    this.orient();
+    this.orient();  
   }
 
   async submit() {
