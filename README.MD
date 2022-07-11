@@ -16,3 +16,8 @@ The following depicts the high-level application concept
 - NodeJS: https://nodejs.org/en/
 
 ### Deployment
+
+
+#### Detail Flows
+This is a sequence diagram to give an example of how the authorization works within the application
+![Alt text](src/assets/auth-sequence.png "auth sequence")
