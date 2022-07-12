@@ -15,7 +15,7 @@ import { EventService } from './services/event.service';
 export class AppComponent implements OnInit {
 
   showLogo: boolean = true;
-  imgPreview: any = "";
+  imgPreview: any = sessionStorage.getItem("PROJECTI.PROFILE_PIC");
 
   navigate: any =
     [
