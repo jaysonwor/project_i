@@ -5,13 +5,13 @@ import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera
 import { Log } from "./log";
 
 const IMAGE_DIR = 'stored-images';
-const IMAGE_PARENT_DIR = Directory.Cache;
+const IMAGE_PARENT_DIR = Directory.Data;
 const PROFILE_PIC = "PROJECTI.PROFILE_PIC";
 
 @Injectable({
     providedIn: 'root'
 })
-export class PhotoUtils implements OnInit {
+export class PhotoUtils {
 
     profilePath: string = 'profile' + '.jpeg';
 
@@ -19,14 +19,6 @@ export class PhotoUtils implements OnInit {
         private plt: Platform,
         private log: Log
     ) {
-    }
-
-    async ngOnInit() {
-        if (this.plt.is('hybrid')) {
-            await this.createDirectory();
-        } else {
-            throw new Error("Method not implemented.");
-        }
     }
 
     /**
@@ -123,7 +115,7 @@ export class PhotoUtils implements OnInit {
 
         if (err) {
             this.log.error("createDirectory: error: " + err);
-            throw new Error(err);
+            // throw new Error(err);
         } else {
             this.log.debug("createDirectory: success: " + JSON.stringify(res));
         }

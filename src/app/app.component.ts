@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { CognitoService } from './services/cognito.service';
+import { Capacitor } from '@capacitor/core';
 import { Log } from './utils/log';
 // import { ScreenOrientation } from '@ionic-native/screen-orientation/ngx';
 import { AppConstants } from 'src/app/app.constants';
@@ -60,7 +61,7 @@ export class AppComponent implements OnInit {
 
   subscription: any;
 
-  async ngOnInit() {
+  async ngOnInit() {    
 
     //resets the log after each navi action
     this.router.events.subscribe((ev) => {
@@ -73,6 +74,11 @@ export class AppComponent implements OnInit {
     this.subscription = this.event.formRefreshSource$.subscribe(data => {
       this.imgPreview = sessionStorage.getItem("PROJECTI.PROFILE_PIC");
     });
+
+    //on devices make sure directory exists
+    if (Capacitor.isNativePlatform()) {
+      await this.photo.createDirectory();
+    } 
   }
 
   get session(): Boolean {
