@@ -1,0 +1,26 @@
+<ion-header class="box ion-no-border" style="--r1:130%;--r2:71.5%">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Studio
+    </ion-title>
+  </ion-toolbar>
+</ion-header> 
+
+<ion-content class="ion-padding">  
+
+  <video id="video_1" class="video-js vjs-default-skin" playsinline [hidden]="isDevice"></video>  
+
+  <ion-fab vertical="bottom" horizontal="center" slot="fixed" >
+    <ion-fab-button (click)="isRecording ? stopRecord() : record()" [disabled]="isDisabled" [hidden]="!isDevice || uploadReady">
+      <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
+    </ion-fab-button>
+
+    <ion-button (click)="upload()" [hidden]="!uploadReady">Upload</ion-button>
+  </ion-fab>
+
+  
+
+</ion-content>

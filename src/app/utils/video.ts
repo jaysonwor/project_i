@@ -1,16 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Capacitor } from '@capacitor/core';
 import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { Storage } from "@capacitor/storage";
+import { Storage } from '@capacitor/storage';
+import * as saveAs from 'file-saver';
 import { Log } from "./log";
-// import { File } from '@awesome-cordova-plugins/file/ngx';
-// import { File } from '@ionic-native/file';
-// import { FilePath } from '@ionic-native/file-path/ngx';
-import { File, FileEntry } from '@ionic-native/File/ngx';
-import write_blob from 'capacitor-blob-writer';
-import { saveAs } from 'file-saver';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { FileSaverDirective, FileSaverService } from 'ngx-filesaver';
+
+import { File } from '@awesome-cordova-plugins/file/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -21,8 +16,7 @@ export class VideoUtils {
 
     constructor(
         private log: Log,
-        private file: File,
-        private _FileSaverService: FileSaverService
+        private file: File
     ) { }
 
     async loadVideos() {
@@ -31,120 +25,113 @@ export class VideoUtils {
         return this.videos;
     }
 
-    private async writeAndOpenFile(data: any, fileName: string) {
-        var reader = new FileReader();
-        reader.readAsDataURL(data);
-        reader.onloadend = async function () {
-            var base64data = reader.result;
-            try {
-                const result = await Filesystem.writeFile({
-                    path: fileName,
-                    data: <string>base64data,
-                    directory: Directory.Data,
-                    recursive: true
-                });
-                let fileOpener: FileOpener = new FileOpener();
-                fileOpener.open(result.uri, data.type)
-                    .then(() => console.log('File is opened'))
-                    .catch(e => console.log('Error opening file', e));
-    
-                console.debug('Wrote file', result.uri);
-            } catch (e) {
-                console.error('Unable to write file', e);
-            }
-        }
+    async saveFileWeb(blob) {
+        const base64Data = await this.convertBlobToBase64(blob) as string;
+        const filePath = Directory.Data + "/" + new Date().getTime() + '.mp4';
+        const savedFile = await this.file.writeFile(
+            Directory.Data,
+            new Date().getTime() + '.mp4',
+            base64Data,
+            { replace: true, append: false }
+        );
     }
-    
+
+    async copyFileToLocalDir(fullPath) {
+        
+        let myPath = fullPath;
+        // Make sure we copy from the right location
+        if (fullPath.indexOf('file://') < 0) {
+            myPath = 'file://' + fullPath;
+        }
+
+        const ext = myPath.split('.').pop();
+        const d = Date.now();
+        const newName = `${d}.${ext}`;
+
+        const name = myPath.substr(myPath.lastIndexOf('/') + 1);
+        const copyFrom = myPath.substr(0, myPath.lastIndexOf('/') + 1);
+        const copyTo = Directory.Data;
+
+        this.log.debug(name)
+        this.log.debug(copyFrom)
+        this.log.debug(newName)
+        this.log.debug(copyTo)
+        const [err, res] = await Filesystem.copy({
+            from: myPath,
+            to: newName,
+            toDirectory: copyTo
+        })
+            .then(v => [null, v], err => [err, null]);
+
+        if (err) {
+            this.log.error("DEBUG " + err)
+        }
+
+        this.log.info("savedFile")
+        const savedFile = await Filesystem.getUri({
+            path: newName,
+            directory: Directory.Data
+        });
+        this.log.info(savedFile.uri)
+
+        return this.storeVideo(savedFile.uri);
+
+        // this.file.copyFile(copyFrom, name, copyTo, newName).then(
+        //   success => {
+        //     this.loadFiles();
+        //   },
+        //   error => {
+        //     console.log('error: ', error);
+        //   }
+        // );
+    }
 
     async storeVideo(blob) {
         const fileName = new Date().getTime() + '.mp4';
+        // const filePath = Directory.Data+"/"+new Date().getTime() + '.mp4';
+        const filePath = blob;
+
+        // const base64Data = await this.convertBlobToBase64(blob) as string;
+        // // const savedFile = await Filesystem.writeFile({
+        // //     path: fileName,
+        // //     data: base64Data,
+        // //     directory: Directory.Data
+        // // });
+        // saveAs(base64Data, filePath)
+
+        // Add file to local array
+        // this.videos.unshift(savedFile.uri);
+        this.videos.unshift(filePath);
+
+        // Write information to storage
+        return Storage.set({
+            key: this.VIDEOS_KEY,
+            value: JSON.stringify(this.videos)
+        });
+    }
+
+    async saveLocalWebVideo(blob) {
+        const fileName = new Date().getTime() + '.mp4';
+        // const filePath = Directory.Data+"/"+new Date().getTime() + '.mp4';
+        const filePath = blob;
+
         const base64Data = await this.convertBlobToBase64(blob) as string;
-        const filePath = Directory.Data + "/" + fileName
+        // // const savedFile = await Filesystem.writeFile({
+        // //     path: fileName,
+        // //     data: base64Data,
+        // //     directory: Directory.Data
+        // // });
+        saveAs(base64Data, filePath)
 
-        if (Capacitor.isNativePlatform()) {
-            this.writeAndOpenFile(blob, filePath);
-            // const [err, res] = await this.file.writeFile(
-            //     Directory.Data,
-            //     fileName,
-            //     base64Data,
-            //   ).
-            //   then(v => [null, v], err => [err, null]);
+        // Add file to local array
+        // this.videos.unshift(savedFile.uri);
+        this.videos.unshift(filePath);
 
-            // if(err) {
-            //     this.log.error(err)
-            // } else {
-            //     const savedFile = res;
-            //     this.log.debug(savedFile)
-            //     // // Add file to local array
-            //     // this.videos.unshift(savedFile.uri);
-
-            //     // // Write information to storage
-            //     // return Storage.set({
-            //     //     key: this.VIDEOS_KEY,
-            //     //     value: JSON.stringify(this.videos)
-            //     // });
-            // }
-        } else {
-            
-            this._FileSaverService.save(blob, filePath);
-            // saveAs(base64Data, filePath);
-
-            // this.log.debug(filePath)
-            // this.writeAndOpenFile(blob, filePath)
-        }
-        // this.log.debug(base64Data);
-
-        // const [err, res] = await this.file.writeFile(
-        //     Directory.Data,
-        //     fileName,
-        //     base64Data,
-        //   ).
-        //   then(v => [null, v], err => [err, null]);
-
-        // const [err, res] = await Filesystem.writeFile({
-        //         path: fileName,
-        //         data: base64Data,
-        //         directory: Directory.Data,
-        //       }).
-        //       then(v => [null, v], err => [err, null]);
-
-        // const [err, res] = await write_blob({
-        //     directory: Directory.Data,
-        //     path: fileName,
-        //     blob: blob
-        //   });
-
-
-
-        // if(err) {
-        //     this.log.error(err)
-        // } else {
-        //     const savedFile = res;
-        //     this.log.debug(savedFile)
-        //     // // Add file to local array
-        //     // this.videos.unshift(savedFile.uri);
-
-        //     // // Write information to storage
-        //     // return Storage.set({
-        //     //     key: this.VIDEOS_KEY,
-        //     //     value: JSON.stringify(this.videos)
-        //     // });
-        // }
-
-        // const savedFile = await Filesystem.writeFile({
-        //     path: fileName,
-        //     data: base64Data,
-        //     directory: Directory.Data,
-        //   });
-
-        // this.log.debug(savedFile);
-        // const savedFile = await Filesystem.writeFile({
-        //     path: fileName,
-        //     data: base64Data,
-        //     directory: Directory.Data
-        // });
-
-
+        // Write information to storage
+        return Storage.set({
+            key: this.VIDEOS_KEY,
+            value: JSON.stringify(this.videos)
+        });
     }
 
     // Helper function
@@ -159,11 +146,19 @@ export class VideoUtils {
 
     // Load video as base64 from url
     async getVideoUrl(fullPath) {
+        // this.log.info(Directory.Data)
         const path = fullPath.substr(fullPath.lastIndexOf('/') + 1);
-        const file = await Filesystem.readFile({
+        // this.log.info(path)
+        const [err, res] = await Filesystem.getUri({
             path: path,
             directory: Directory.Data
-        });
-        return `data:video/mp4;base64,${file.data}`;
+        })
+            .then(v => [null, v], err => [err, null]);
+
+        if (err) {
+            this.log.error("DEBUG " + err)
+        }
+        // return `data:video/mp4;base64,${res.data}`;
+        return res.uri;
     }
 }

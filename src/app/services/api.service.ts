@@ -104,6 +104,45 @@ export class ApiService {
     })
   }
 
+  getVideo() {
+    return new Promise((resolve, reject) => {
+      let body = {
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/get-video", 'POST', additionalParams, body)
+        .then((res) => {
+          resolve(res)
+        }).catch((err) => {
+          reject({ message: err.message })
+        });
+    })
+  }
+
+  saveVideo(form) {
+    return new Promise((resolve, reject) => {
+      let body = {
+        body: form,
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/save-video", 'POST', additionalParams, body)
+        .then((res) => {
+          resolve(res)
+        }).catch((err) => {
+          reject({ message: err.message })
+        });
+    })
+  }
+
   async loadPhoto() {
     // console.log(this.cognitoService.getToken())
     const [err, res] = await this.getPhoto().
@@ -124,6 +163,8 @@ export class ApiService {
       sessionToken: sessionStorage.getItem(this.appConstants.SESSIONTOKEN),
       defaultContentType: 'application/json',
       defaultAcceptType: 'application/json',
+      // defaultContentType: 'multipart/form-data',
+      // defaultAcceptType: 'multipart/form-data',
       region: environment.region,
       invokeUrl: environment.apiGatewayEndpoint
     }

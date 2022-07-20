@@ -74,6 +74,6 @@ export class Log implements OnInit {
     }
 
     private truncate(input: string) {
-        return input.length > 100 ? `${input.substring(0, 100)}...` : input;
+        return input.length > 1000 ? `${input.substring(0, 100)}...` : input;
     }
 }
