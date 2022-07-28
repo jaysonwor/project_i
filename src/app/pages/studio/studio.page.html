@@ -7,20 +7,113 @@
       Studio
     </ion-title>
   </ion-toolbar>
-</ion-header> 
+</ion-header>
 
-<ion-content class="ion-padding">  
+<ion-content class="ion-padding">
 
-  <video id="video_1" class="video-js vjs-default-skin" playsinline [hidden]="isDevice"></video>  
+  <div [hidden]="isDevice || (formState != appConstants.RECORD_READY && formState != appConstants.UPLOAD_READY)">
+    <video id="video_1" class="video-js vjs-default-skin" playsinline ></video>
+  </div>
 
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed" >
-    <ion-fab-button (click)="isRecording ? stopRecord() : record()" [disabled]="isDisabled" [hidden]="!isDevice || uploadReady">
-      <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
-    </ion-fab-button>
+  <ion-grid class="center-horizontal">    
+    <ion-row class="center-vertical" [hidden]="!isDevice || formState != appConstants.RECORD_READY">
+      <ion-col>
+        <ion-fab>
+          <ion-fab-button (click)="record()">
+            <ion-icon [name]="'videocam'"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
+      </ion-col>
+    </ion-row>
+    <ion-row [hidden]="formState != appConstants.UPLOAD_READY">
+      <ion-col>
+        <ion-button (click)="uploadVideo()">Upload Video</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="center-vertical" [hidden]="formState != appConstants.UPLOADING">
+      <ion-col>
+        <ion-spinner name="circles"></ion-spinner>
+      </ion-col>
+    </ion-row>
+    <ion-row class="center-vertical" [hidden]="formState != appConstants.UPLOAD_ERROR">
+      <ion-col>
+        <h1 color="primary">Failed to upload video</h1>
+        <ion-button (click)="uploadVideo()">Try Again?</ion-button>
+      </ion-col>
+    </ion-row>
+    <ion-row class="center-vertical" [hidden]="formState != appConstants.UPLOAD_SUCCESS">
+      <ion-col>
+        <ion-button (click)="ionViewWillEnter()">Record Another?</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
-    <ion-button (click)="upload()" [hidden]="!uploadReady">Upload</ion-button>
-  </ion-fab>
+  <!-- <div class="center-horizontal">
+    <ion-button (click)="uploadVideo()">Upload Video</ion-button>
+  </div> -->
+  <!-- <div class="center-horizontal center-vertical">
+    <ion-spinner name="circles"></ion-spinner>
+  </div> -->
+  <!-- <div>
+    <ion-row class="center">
+      <h1 color="primary">Video Uploaded</h1>
+    </ion-row>
+    <ion-row>
+      <ion-button (click)="ionViewWillEnter()">Record Another?</ion-button>
+    </ion-row>
+  </div> -->
 
+  <!-- web only -->
+  <!-- <div [hidden]="isUploading || uploadSuccess || uploadError">
+    <video id="video_1" class="video-js vjs-default-skin" playsinline [hidden]="isDevice"></video>
+
+    <ion-button (click)="uploadVideo()" [hidden]="!uploadReady">Upload Video</ion-button>
+
+    <ion-fab vertical="center" horizontal="center" slot="fixed">
+      <ion-fab-button (click)="isRecording ? stopRecord() : record()" [disabled]="isDisabled"
+        [hidden]="!isDevice || uploadReady">
+        <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
+      </ion-fab-button>
+
+      <ion-button (click)="uploadVideo()" [hidden]="!uploadReady">Upload Video</ion-button>
+    </ion-fab>
+  </div> -->
+
+  <!-- <div [hidden]="isDevice || isUploading || uploadSuccess || uploadError">
+    <video id="video_1" class="video-js vjs-default-skin" playsinline ></video>
+
+    <ion-fab vertical="center" horizontal="center" slot="fixed">
+      <ion-fab-button (click)="isRecording ? stopRecord() : record()" [disabled]="isDisabled"
+        [hidden]="!isDevice || uploadReady">
+        <ion-icon [name]="isRecording ? 'stop' : 'videocam'"></ion-icon>
+      </ion-fab-button>
+
+      <ion-button (click)="uploadVideo()" [hidden]="!uploadReady">Upload Video</ion-button>
+    </ion-fab>
+  </div>
   
+  <div class="center">    
+    <ion-row>
+      <ion-col [hidden]="!isUploading">
+        <ion-spinner name="circles"></ion-spinner>
+      </ion-col>
+      <ion-col [hidden]="isUploading || !uploadSuccess">
+        <ion-row>
+          <h1 color="primary">Video Uploaded</h1>
+        </ion-row>
+        <ion-row>
+          <ion-button (click)="ionViewWillEnter()">Record Another?</ion-button>
+        </ion-row>
+      </ion-col>
+      <ion-col [hidden]="isUploading || !uploadError">
+        <ion-row>
+          <h1 color="primary">Failed to upload video</h1>
+        </ion-row>
+        <ion-row>
+          <ion-button (click)="uploadVideo()">Try Again?</ion-button>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </div> -->
 
 </ion-content>

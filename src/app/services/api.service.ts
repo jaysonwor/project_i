@@ -136,9 +136,31 @@ export class ApiService {
       apigClientFactory.newClient(this.getApiClientProps)
         .invokeApi({}, "/save-video", 'POST', additionalParams, body)
         .then((res) => {
-          resolve(res)
+          resolve(res)    
         }).catch((err) => {
-          reject({ message: err.message })
+          this.log.error(JSON.stringify(err))
+          reject("failed to upload")
+        });
+    })
+  }
+
+  uploadVideo(form) {
+    return new Promise((resolve, reject) => {
+      let body = {
+        body: form,
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/upload-video", 'POST', additionalParams, body)
+        .then((res) => {
+          resolve(res)    
+        }).catch((err) => {
+          this.log.error(JSON.stringify(err))
+          reject("failed to upload")
         });
     })
   }
