@@ -1,22 +1,19 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api.service';
 import { Log } from 'src/app/utils/log';
 import { ToastUtil } from 'src/app/utils/toast';
 import videojs from 'video.js';
-import * as RecordRTC from 'recordrtc';
-import * as Record from 'videojs-record/dist/videojs.record.js';
 import { AppConstants } from 'src/app/app.constants';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
   selector: 'app-library',
   templateUrl: './library.page.html',
   styleUrls: ['./library.page.scss'],
 })
-export class LibraryPage implements OnInit {
+export class LibraryPage implements OnInit, OnDestroy {
   private config: any;
-  private player: any;
-  private plugin: any;
   urls: string[] = [];
   count: number = 0;
   formState: string = null;
@@ -28,58 +25,64 @@ export class LibraryPage implements OnInit {
     private toast: ToastUtil,
     public appConstants: AppConstants,
     private alertController: AlertController
-  ) { }
-
-  async ngOnInit() {
-    console.log("ngOnInit");
-    // video.js configuration
+  ) { 
     this.config = {
-      // sources: {
-      //   src: this.url,
-      //   type: "video/mp4"
-      // },
       controls: true,
     };
   }
 
-  ionViewWillLeave() {
-    for (let pair of this.playersMap) {
-      var [key, value] = pair;
-      // console.log(key + " = " + value);
-      videojs(key).reset();
+  ngOnInit() {}  
+
+  async ngAfterViewInit() {
+    if (!Capacitor.isNativePlatform()) {
+      this.formState = this.appConstants.LOADING;
+      //theres a race condition with videojs renderer so need to hurry and render form elements
+      //and we can do this by getting a count of bucket items and building the form
+      //then creating the videojs objects
+      await this.getVideosCount();    
+      await this.renderVideos();
+      this.resetStates();
+    } else {
+      //todo
     }
   }
 
-  async ionViewWillEnter() {
-    console.log("ionViewWillEnter");
-    // this.count = 17
-    // this.count = [0,1,2,3,4]
-    const count = await this.countVideos();
-    this.count = count.data
-    console.log(count);
-
-    this.formState = this.appConstants.UPLOADING;
+  private async renderVideos() {
     const response = await this.listVideos();
     this.urls = response.data;
-
-    this.formState = "";
-
     this.playersMap = new Map();
-
     this.urls.forEach((objs, i) => {
       const obj = Object.entries(objs);
       const id = obj[0][0];
       const url = obj[0][1];
-      // console.log(obj[0][1])
-      // console.log(obj[1])
       let el = "player_" + i;
       this.playersMap.set(el, id);
       let player = videojs(el, this.config);
       player.src({ type: 'video/mp4', src: url });
-      player.ready(function () {
-        console.log('onPlayerReady', this);
+      player.ready( () => {
+        this.log.debug(`#${++i} ${id}, ready to play`);
       });
-    })
+    });
+  }
+
+  private async getVideosCount() {    
+    const count = await this.countVideos();
+    this.count = count.data;
+  }
+
+  ngOnDestroy() {
+    if (!Capacitor.isNativePlatform()) {
+      for (let pair of this.playersMap) {
+        var [key, value] = pair;
+        videojs(key).reset();
+      }
+    } else {
+      //todo
+    }
+  }
+
+  private resetStates() {
+    this.formState = null;
   }
 
   private async listVideos() {
@@ -107,7 +110,6 @@ export class LibraryPage implements OnInit {
   }
 
   private async delete(id) {
-    console.log("Deleting...");
     const player = "player_" + id;
     const url = this.playersMap.get(player);
     const [err, res] = await this.apiService.deleteVideo(url).
@@ -117,13 +119,9 @@ export class LibraryPage implements OnInit {
       this.log.error(JSON.stringify(err));
       this.toast.error(`error deleting video: ${JSON.stringify(err)}`);
     } else {
-      // return res;
-      this.ionViewWillEnter();
+      //todo: need to find a better to refresh but until just render all videos again 
+      this.ngAfterViewInit();
     }
-    // const [key, value] = this.playersMap.get(player);
-    // console.log(this.playersMap.get(player))
-    // console.log(value)
-    // console.log("Deleteing ID = "+player);
   }
 
   async promptDelete(id) {

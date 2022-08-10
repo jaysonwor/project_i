@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { MediaCapture, MediaFile, CaptureError } from '@awesome-cordova-plugins/media-capture/ngx';
 import { Capacitor } from '@capacitor/core';
@@ -16,38 +16,31 @@ import * as Record from 'videojs-record/dist/videojs.record.js';
 import { AppConstants } from 'src/app/app.constants';
 import { Filesystem } from '@capacitor/filesystem';
 import { Platform } from '@ionic/angular';
-// import { Entry, File, FileEntry } from '@awesome-cordova-plugins/file/ngx';
 
 @Component({
   selector: 'app-studio',
   templateUrl: './studio.page.html',
   styleUrls: ['./studio.page.scss'],
 })
-export class StudioPage implements OnInit {
+export class StudioPage implements OnInit, OnDestroy {
   video: any;
   videoPlayer: any;
   videos = [];
   formState: string = null;
   duration = 60
-  // isRecording: boolean = false;
-  // isUploading: boolean = false;
-  // uploadSuccess: boolean = false;
-  // uploadReady: boolean = false;  
-  // uploadError: boolean = false;  
-  // isDisabled: boolean = true;  
   isDevice: boolean = Capacitor.isNativePlatform();
   private config: any;
   private player: any;
   private plugin: any;
 
   constructor(
-    private cognitoService: CognitoService,
+    // private cognitoService: CognitoService,
     private apiService: ApiService,
     private toast: ToastUtil,
-    private photo: PhotoUtils,
-    private event: EventService,
-    private router: Router,
-    private changeDetector: ChangeDetectorRef,
+    // private photo: PhotoUtils,
+    // private event: EventService,
+    // private router: Router,
+    // private changeDetector: ChangeDetectorRef,
     // private video: VideoUtils,
     private mediaCapture: MediaCapture,
     private log: Log,
@@ -55,48 +48,30 @@ export class StudioPage implements OnInit {
     private plt: Platform
     // private file: File
   ) {
-  }
-
-  async ngOnInit() {
     if (!Capacitor.isNativePlatform()) {
       // inits the videojs-record plugin
       this.plugin = Record;
 
       // video.js configuration
-      this.config = {
+      this.config = { 
         controls: true,
         plugins: {
           record: {
             audio: true,
             video: true,
             maxLength: this.duration,
-            // displayMilliseconds: false,
             debug: true,
-            // convertEngine: 'ts-ebml'
           }
         }
       };
     }
   }
 
-  ionViewWillLeave() {
-    if (!Capacitor.isNativePlatform()) {
-      this.player.record().reset();
-    }
-    this.resetStates();
+  ngOnInit() {
+    this.formState = this.appConstants.LOADING;
   }
 
-  private resetStates() {
-    this.formState = null;
-    // this.isUploading = false;
-    // this.uploadSuccess = false;
-    // this.uploadReady = false;
-    // this.uploadError = false;  
-    // this.isDisabled = true;  
-  }
-
-  async ionViewWillEnter() {
-    this.resetStates();
+  ngAfterViewInit() { 
     if (Capacitor.isNativePlatform()) {
       this.videoPlayer = CapacitorVideoPlayer;
       this.formState = this.appConstants.RECORD_READY;
@@ -105,24 +80,28 @@ export class StudioPage implements OnInit {
     }
   }
 
+  ngOnDestroy() {
+    if (!Capacitor.isNativePlatform()) {
+      this.player.dispose();
+    }
+    this.resetStates;
+  }
+
+  private resetStates() {
+    this.formState = null;
+  }
+
   private initWebRecorder(i): any {
     // ID with which to access the template's video element
-    const el = 'video_' + i;
+    const el = 'recorder_' + i;
 
     // setup the player via the unique element ID
     const player: any = videojs(el, this.config, () => {
       this.log.debug(`player ready! id: ${el}`);
-
-      // print version information at startup
-      // var msg = 'Using video.js ' + videojs.VERSION +
-      //   ' with videojs-record ' + videojs.getPluginVersion('record') +
-      //   ' and recordrtc ' + RecordRTC.version;
-      // videojs.log(msg);
     });
 
-    // device is ready
     // player.on('onPlayerReady', () => {
-    //   this.toast.info('playback!');
+    //   this.log.info('playback!');
     // });
 
     // device is ready
@@ -207,7 +186,7 @@ export class StudioPage implements OnInit {
   }
 
   async uploadVideo() {
-    this.formState = this.appConstants.UPLOADING;
+    this.formState = this.appConstants.LOADING;
     const [err, res] = await this.apiService.saveVideo(this.video).
       then(v => [null, v], err => [err, null]);
 
