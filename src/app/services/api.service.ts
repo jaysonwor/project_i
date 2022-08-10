@@ -144,6 +144,69 @@ export class ApiService {
     })
   }
 
+  listVideos() {
+    return new Promise((resolve, reject) => {
+      let body = {
+        body: {}
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/list-videos", 'POST', additionalParams, body)
+        .then((res) => {
+          resolve(res)    
+        }).catch((err) => {
+          this.log.error(JSON.stringify(err))
+          reject("failed to list videos")
+        });
+    })
+  }
+
+  deleteVideo(url) {
+    return new Promise((resolve, reject) => {
+      let body = {
+        url: url
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/delete-video", 'POST', additionalParams, body)
+        .then((res) => {
+          resolve(res)    
+        }).catch((err) => {
+          this.log.error(JSON.stringify(err))
+          reject("failed to delete video")
+        });
+    })
+  }
+
+  countVideos() {
+    return new Promise((resolve, reject) => {
+      let body = {
+        body: {}
+      }
+      let additionalParams = {
+        headers: {
+          jwt: this.cognitoService.getToken()
+        }
+      };
+      apigClientFactory.newClient(this.getApiClientProps)
+        .invokeApi({}, "/count-videos", 'GET', additionalParams, {})
+        .then((res) => {
+          resolve(res)    
+        }).catch((err) => {
+          this.log.error(JSON.stringify(err))
+          reject("failed to count videos")
+        });
+    })
+  }
+
   uploadVideo(form) {
     return new Promise((resolve, reject) => {
       let body = {

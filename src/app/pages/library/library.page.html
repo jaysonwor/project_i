@@ -1,0 +1,40 @@
+<ion-header class="box ion-no-border" style="--r1:130%;--r2:71.5%">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Library
+    </ion-title>
+  </ion-toolbar>
+</ion-header> 
+
+<ion-content class="ion-padding">
+
+  <mat-card class="inline-block" *ngFor="let number of [].constructor(count); let i = index">    
+    <mat-card-content>
+      <ion-spinner name="circles" [hidden]="formState != appConstants.UPLOADING"></ion-spinner>
+    </mat-card-content>    
+    <mat-card-content [hidden]="formState == appConstants.UPLOADING">
+      <video id="player_{{ i }}" class="video-js vjs-default-skin" playsinline  width="350px" height="300px">
+      </video>
+    </mat-card-content>   
+    <mat-card-actions [hidden]="formState == appConstants.UPLOADING">
+      <a mat-button (click)="promptDelete(i)">Delete</a>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- <div>
+    <video id="video_1" class="video-js vjs-default-skin" playsinline controls preload="auto"  width="640" height="264"> -->
+      <!-- <source [src]="url" type="video/webm" /> -->
+    <!-- </video>
+  </div> -->
+
+  <!-- <video *ngIf="url" id="video_1"
+     class="video-js vjs-default-skin vjs-big-play-centered vjs-16-9"
+     controls preload="auto"  width="640" height="264">
+
+    <source [src]="url" type="video/mp4" />
+
+  </video> -->
+</ion-content>

@@ -1,0 +1,17 @@
+.inline-block {
+    display: inline-block;
+    margin: 10px;
+    height: 400px;
+    width: 400px;
+}
+
+ion-spinner {
+    transform: scale(5);
+    position: absolute;
+    top: 50%;
+    left: 45%;
+}
+
+mat-card-actions {
+    text-align: center;
+}

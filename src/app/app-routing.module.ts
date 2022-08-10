@@ -59,6 +59,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/studio/studio.module').then( m => m.StudioPageModule),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'library',
+    loadChildren: () => import('./pages/library/library.module').then( m => m.LibraryPageModule),
+    canActivate: [AuthGuard]
+  },
 ];
 
 @NgModule({

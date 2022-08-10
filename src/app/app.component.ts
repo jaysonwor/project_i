@@ -28,7 +28,12 @@ export class AppComponent implements OnInit {
       {
         title: 'Studio',
         url: '/studio',
-        icon: 'studio'
+        icon: 'videocam'
+      },
+      {
+        title: 'Library',
+        url: '/library',
+        icon: 'library'
       },
       {
         title: 'Profile',
