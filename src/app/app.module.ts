@@ -12,6 +12,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { MediaCapture } from '@awesome-cordova-plugins/media-capture/ngx';
 import { File } from '@awesome-cordova-plugins/file/ngx';
+// import { VideoPlayer } from '@awesome-cordova-plugins/video-player/ngx';
 
 @NgModule({
   declarations: [AppComponent],

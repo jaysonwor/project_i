@@ -11,7 +11,7 @@
 
 <ion-content class="ion-padding">
 
-  <mat-card class="inline-block" *ngFor="let number of [].constructor(count); let i = index">    
+  <mat-card [hidden]="isDevice" class="inline-block" *ngFor="let number of [].constructor(count); let i = index">    
     <mat-card-content>
       <ion-spinner name="circles" [hidden]="formState != appConstants.LOADING"></ion-spinner>
     </mat-card-content>    
@@ -23,5 +23,16 @@
       <a mat-button (click)="promptDelete(i)">Delete</a>
     </mat-card-actions>
   </mat-card>
+
+  <div [hidden]="!isDevice" *ngFor="let url of urls">
+    <ion-list *ngFor="let obj of url | keyvalue">
+      <ion-item (click)="play(obj.value)">
+        {{obj.key}}
+      </ion-item>
+      <!-- <ion-item>
+        {{obj.value}}
+      </ion-item> -->
+    </ion-list>
+  </div>
 
 </ion-content>
