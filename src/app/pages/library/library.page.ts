@@ -45,7 +45,8 @@ export class LibraryPage implements OnInit, OnDestroy {
       //and we can do this by getting a count of bucket items and building the form
       //then creating the videojs objects
       await this.getVideosCount();    
-      await this.renderVideos();
+      if(this.count > 0)
+        await this.renderVideos();
       this.resetStates();
     } else {
       await this.native();

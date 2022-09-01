@@ -11,28 +11,34 @@
 
 <ion-content class="ion-padding">
 
-  <mat-card [hidden]="isDevice" class="inline-block" *ngFor="let number of [].constructor(count); let i = index">    
-    <mat-card-content>
-      <ion-spinner name="circles" [hidden]="formState != appConstants.LOADING"></ion-spinner>
-    </mat-card-content>    
-    <mat-card-content [hidden]="formState == appConstants.LOADING">
-      <video id="player_{{ i }}" class="video-js vjs-default-skin" playsinline  width="350px" height="300px">
-      </video>
-    </mat-card-content>   
-    <mat-card-actions [hidden]="formState == appConstants.LOADING">
-      <a mat-button (click)="promptDelete(i)">Delete</a>
-    </mat-card-actions>
+  <mat-card [hidden]="isDevice" class="inline-block" >
+    <div *ngFor="let number of [].constructor(count); let i = index">  
+      <mat-card-content>
+        <ion-spinner name="circles" [hidden]="formState != appConstants.LOADING"></ion-spinner>
+      </mat-card-content>    
+      <mat-card-content [hidden]="formState == appConstants.LOADING">
+        <video id="player_{{ i }}" class="video-js vjs-default-skin" playsinline  width="350px" height="300px">
+        </video>
+      </mat-card-content>   
+      <mat-card-actions [hidden]="formState == appConstants.LOADING">
+        <a mat-button (click)="promptDelete(i)">Delete</a>
+      </mat-card-actions>
+    </div>  
+    <div *ngIf="count == 0"> No videos found </div>
   </mat-card>
 
-  <div [hidden]="!isDevice" *ngFor="let url of urls">
-    <ion-list *ngFor="let obj of url | keyvalue">
-      <ion-item (click)="play(obj.value)">
-        {{obj.key}}
-      </ion-item>
-      <!-- <ion-item>
-        {{obj.value}}
-      </ion-item> -->
-    </ion-list>
+  <div [hidden]="!isDevice" >
+    <div *ngFor="let url of urls">
+      <ion-list *ngFor="let obj of url | keyvalue">
+        <ion-item (click)="play(obj.value)">
+          {{obj.key}}
+        </ion-item>
+        <!-- <ion-item>
+          {{obj.value}}
+        </ion-item> -->
+      </ion-list>
+    </div>
+    <div *ngIf="urls.length == 0"> No videos found </div>
   </div>
 
 </ion-content>
