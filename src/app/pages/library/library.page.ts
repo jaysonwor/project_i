@@ -135,8 +135,7 @@ export class LibraryPage implements OnInit, OnDestroy {
   }
 
   private async getVideosCount() {    
-    const count = await this.countVideos();
-    this.count = count.data;
+    const count = await this.countVideos();    
   }
 
   private resetStates() {
@@ -161,9 +160,9 @@ export class LibraryPage implements OnInit, OnDestroy {
 
     if (err) {
       this.log.error(JSON.stringify(err));
-      this.toast.error(`error counting videos: ${JSON.stringify(err)}`);
+      this.count = 0;
     } else {
-      return res;
+      this.count = res.data;
     }
   }
 
