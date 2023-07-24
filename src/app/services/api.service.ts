@@ -131,7 +131,6 @@ export class ApiService {
       let additionalParams = {
         headers: {
           jwt: this.cognitoService.getToken(),
-          toast: `AWS ${sessionStorage.getItem(this.appConstants.ACCESSKEY)}:${sessionStorage.getItem(this.appConstants.SACCESSKEY)}:${sessionStorage.getItem(this.appConstants.SESSIONTOKEN)}`,
         }
       };
 
