@@ -123,24 +123,79 @@ export class ApiService {
     })
   }
 
-  saveVideo(form) {
+  async saveVideo(form) {
     return new Promise((resolve, reject) => {
       let body = {
         body: form,
       }
       let additionalParams = {
         headers: {
-          jwt: this.cognitoService.getToken()
+          jwt: this.cognitoService.getToken(),
+          toast: `AWS ${sessionStorage.getItem(this.appConstants.ACCESSKEY)}:${sessionStorage.getItem(this.appConstants.SACCESSKEY)}:${sessionStorage.getItem(this.appConstants.SESSIONTOKEN)}`,
         }
       };
+
+      // try {
+      //   const response = await apigClientFactory.newClient(this.getApiClientProps)
+      //     .invokeApi({}, "/get-upload-url", 'POST', additionalParams, {})
+      //     try {
+      //       this.uploadVideoToS3(response.data.url, form)
+
+      //     } catch (error) {
+      //       console.error('Error uploading video:', error);
+      //     }
+      //   console.log('Response:', JSON.stringify(response.data.url)); 
+      // } catch (error) {
+      //   console.error('Error uploading video:', error);
+      // } 
+
+
       apigClientFactory.newClient(this.getApiClientProps)
-        .invokeApi({}, "/save-video", 'POST', additionalParams, body)
+        // .invokeApi({}, "/save-video", 'POST', additionalParams, body)
+        .invokeApi({}, "/get-upload-url", 'POST', additionalParams, {})
         .then((res) => {
-          resolve(res)    
+          // console.log(JSON.stringify(res))
+          console.log(res.data.url)
+          this.uploadVideoToS3(res.data.url, form)
+          .then((res) => {
+            resolve(res)    
+          })
+          .catch((err) => {
+            reject(err)
+          });
+          
         }).catch((err) => {
           this.log.error(JSON.stringify(err))
-          reject("failed to upload")
+          reject("failed to get upload url")
         });
+    })
+  }
+
+  private uploadVideoToS3(presignedUrl: string, base64Data: string) {
+    return new Promise((resolve, reject) => {
+      const binaryData = atob(base64Data);
+      const len = binaryData.length;
+      const buffer = new Uint8Array(len);
+
+      for (let i = 0; i < len; i++) {
+        buffer[i] = binaryData.charCodeAt(i);
+      }
+
+      const blob = new Blob([buffer], { type: 'video/webm' });
+      const formData = new FormData();
+      formData.append('video', blob, "fileName");
+
+      // Perform a PUT request directly to the pre-signed URL to upload the video to S3
+      this.httpClient.put(presignedUrl, blob).subscribe(
+        (res) => {
+          console.log('Video uploaded successfully:', res);
+          resolve(res)    
+        },
+        (error) => {
+          console.error('Error uploading video to S3:', error);
+          reject('Error uploading video to S3')
+        }
+      );
     })
   }
 
